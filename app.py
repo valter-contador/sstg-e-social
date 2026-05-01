@@ -11,6 +11,12 @@ try:
 except ImportError:
     LAUDO_DISPONIVEL = False
 
+try:
+    from gerar_compartilhamento import gerar_imagem_compartilhamento_simples
+    COMPARTILHAMENTO_DISPONIVEL = True
+except ImportError:
+    COMPARTILHAMENTO_DISPONIVEL = False
+
 # ─── DIRETÓRIO DE DADOS ───────────────────────────────────────────────────────
 # Detecta ambiente: Streamlit Cloud vs Local
 # No Streamlit Cloud: usa diretório relativo "./data"
@@ -674,6 +680,46 @@ if menu == "🔐 Admin SSTG (Gestão)":
                     "Se o app estiver publicado online, substitua o endereço base acima "
                     "na variável `APP_URL` no início do arquivo `app.py`."
                 )
+
+            # ── Gerar Imagem de Compartilhamento ──────────────────────────────────
+            with st.expander("🖼️ Gerar Imagem para Compartilhamento"):
+                st.info("Gere uma imagem com QR Code para compartilhar nas redes sociais ou enviar por email.")
+
+                if COMPARTILHAMENTO_DISPONIVEL:
+                    col_gerar, col_espacador = st.columns([2, 1])
+
+                    with col_gerar:
+                        if st.button("🎨 Gerar Imagem com QR Code", use_container_width=True, key="btn_gerar_img"):
+                            try:
+                                nome_empresa = empresa_sel.split(" — CNPJ:")[0].strip()
+
+                                with st.spinner("Gerando imagem..."):
+                                    img_bytes = gerar_imagem_compartilhamento_simples(
+                                        empresa_nome=nome_empresa,
+                                        cnpj=cnpj_cod,
+                                        app_url=APP_URL
+                                    )
+
+                                st.success("Imagem gerada com sucesso!")
+
+                                # Exibir preview
+                                st.image(img_bytes, use_column_width=True, caption=f"Imagem de compartilhamento: {nome_empresa}")
+
+                                # Download button
+                                st.download_button(
+                                    "⬇️ Baixar Imagem (PNG)",
+                                    img_bytes,
+                                    f"compartilhamento_{cnpj_cod}.png",
+                                    "image/png",
+                                    use_container_width=True
+                                )
+
+                                st.caption("💡 Dica: Use esta imagem em emails, WhatsApp, Telegram ou redes sociais para aumentar a adesão ao questionário.")
+
+                            except Exception as e:
+                                st.error(f"Erro ao gerar imagem: {e}")
+                else:
+                    st.warning("Módulo de compartilhamento não disponível. Verifique se `qrcode` e `Pillow` estão instalados.")
 
             if os.path.exists(nome_res):
                 df_res = pd.read_csv(nome_res, sep=';', dtype=str)
