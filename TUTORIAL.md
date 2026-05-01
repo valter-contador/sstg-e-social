@@ -1,8 +1,10 @@
 # 📚 SSTG E-Social — Tutorial Operacional
 
-**Versão:** 6.0  
-**Data:** 30/04/2026  
-**Público:** Equipe de Gestão RH | Pessoal Administrativo
+**Versão:** 6.1  
+**Data:** 30/04/2026 (Atualizado)  
+**Público:** Equipe de Gestão RH | Pessoal Administrativo | Usuários Finais
+
+**Última atualização:** Publicação no Streamlit Cloud, Gerador de Imagens, Documentação Integrada
 
 ---
 
@@ -13,9 +15,11 @@
 3. [Cadastro Manual](#cadastro-manual)
 4. [Cadastro via CSV (Em Lote)](#cadastro-via-csv)
 5. [Gerar Links para Colaboradores](#gerar-links-para-colaboradores)
-6. [Módulo Colaborador — Responder Questionário](#módulo-colaborador)
-7. [Consultar Resultados](#consultar-resultados)
-8. [FAQ e Troubleshooting](#faq-e-troubleshooting)
+6. [Gerar Imagem de Compartilhamento (QR Code)](#gerar-imagem-de-compartilhamento)
+7. [Módulo Colaborador — Responder Questionário](#módulo-colaborador)
+8. [Consultar Resultados](#consultar-resultados)
+9. [Documentação Integrada](#documentação-integrada)
+10. [FAQ e Troubleshooting](#faq-e-troubleshooting)
 
 ---
 
@@ -23,11 +27,23 @@
 
 ### URL de Acesso
 
+#### Online (Recomendado - Streamlit Cloud)
+
+```
+https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app
+```
+
+✅ **Acesso de qualquer lugar**  
+✅ **Sem necessidade de servidor local**  
+✅ **Sempre disponível online**
+
+#### Local (Desenvolvimento)
+
 ```
 http://192.168.77.2:8501
 ```
 
-> **⚠️ Nota:** O app deve estar rodando na máquina servidor.
+> **⚠️ Nota:** Apenas quando o app está rodando na máquina servidor local.
 
 ### Tela Inicial
 
@@ -287,6 +303,73 @@ Na **Aba 1 — Cadastro**, scroll down até: **🔗 Links para Compartilhar**
 1. **Copie** o link correspondente
 2. **Envie** para o RH ou responsável
 3. **Divulgue** aos colaboradores (WhatsApp, email, etc.)
+
+---
+
+## 🖼️ Gerar Imagem de Compartilhamento
+
+### Nova Funcionalidade: Imagem com QR Code
+
+A partir da **Aba 3 (Resultados)**, você pode gerar uma imagem visual atrativa com QR Code para compartilhar o questionário com colaboradores.
+
+### Passo 1: Acessar Gerador de Imagem
+
+Na **Aba 3 — Resultados**:
+
+1. Selecione a empresa
+2. Expanda: **🖼️ Gerar Imagem para Compartilhamento**
+
+### Passo 2: Gerar Imagem
+
+```
+┌────────────────────────────────────────────┐
+│ 🖼️ Gerar Imagem para Compartilhamento     │
+├────────────────────────────────────────────┤
+│                                            │
+│ Gere uma imagem com QR Code para           │
+│ compartilhar nas redes sociais ou enviar   │
+│ por email.                                 │
+│                                            │
+│ [🎨 Gerar Imagem com QR Code]             │
+│                                            │
+└────────────────────────────────────────────┘
+```
+
+Clique no botão **🎨 Gerar Imagem com QR Code**
+
+### Passo 3: Visualizar e Baixar
+
+A imagem gerada conterá:
+
+```
+┌──────────────────────────────────────┐
+│ SSTG E-SOCIAL (branco sobre azul)    │
+│ Avaliação de Riscos Psicossociais    │
+│ Empresa: SSTG E-Social Ltda          │
+│                                      │
+│          [QR CODE]                   │
+│         (escanear)                   │
+│                                      │
+│ Clique no QR Code ou acesse...       │
+└──────────────────────────────────────┘
+```
+
+**Opções:**
+- 📸 **Visualizar:** Vê a imagem na tela
+- ⬇️ **Baixar (PNG):** Salva em seu computador
+
+### Passo 4: Compartilhar
+
+Use a imagem para:
+
+| Canal | Como Usar |
+|-------|-----------|
+| 📧 **Email** | Anexar a imagem em campanha de sensibilização |
+| 📱 **WhatsApp** | Enviar para grupos de colaboradores |
+| 🌐 **Redes Sociais** | Postar no Facebook, LinkedIn ou Instagram |
+| 🖨️ **Impressão** | Criar adesivos ou cartazes na empresa |
+
+💡 **Dica:** O QR Code direciona automaticamente para o questionário da empresa específica!
 
 ---
 
@@ -638,6 +721,67 @@ CPF;Função
 2. Procure por: `SENHA_ADMIN = "sstg2025"`
 3. Altere para: `SENHA_ADMIN = "suanova_senha"`
 4. Salve e reinicie o app
+
+---
+
+## 📚 Documentação Integrada
+
+### Acessar Documentação no App
+
+O sistema possui uma **Aba 5 (Documentação)** com 6 documentos disponíveis:
+
+#### Dentro do App
+
+1. **Login** como Admin SSTG
+2. Vá para **Aba 5 — 📚 Documentação**
+3. Escolha um documento:
+
+| Documento | Descrição | Público |
+|-----------|-----------|---------|
+| **📄 README.md** | Visão geral, características, FAQ | Todos |
+| **👥 TUTORIAL.md** | Este documento - passo a passo | RH / Admin |
+| **🚀 SETUP** | Instalação, configuração, Google Drive | Técnico |
+| **🔧 TÉCNICO** | Arquitetura, dados, fluxos, segurança | Desenvolvedor |
+| **✅ CHECKLIST** | Validação pré-produção (60+ itens) | Admin |
+| **🚀 PUBLICAÇÃO** | Processo de publicação, Streamlit Cloud | Técnico |
+
+#### Opções de Visualização
+
+Para cada documento:
+- **📖 Ler:** Visualizar no navegador
+- **⬇️ PDF:** Baixar arquivo completo
+
+#### Menu Lateral
+
+Você também pode acessar via menu lateral:
+
+```
+📚 Documentação
+├── 📖 Guias e Tutoriais (Expander)
+│   ├── 📄 README
+│   ├── 👥 TUTORIAL
+│   ├── 🚀 SETUP
+│   ├── 🔧 TÉCNICO
+│   ├── ✅ CHECKLIST
+│   └── 🚀 PUBLICAÇÃO
+```
+
+### Documentação de Publicação
+
+A **DOCUMENTACAO_PUBLICACAO.md** detalha:
+
+✅ Como o sistema foi publicado no Streamlit Cloud  
+✅ Recursos e sistemas utilizados  
+✅ Processo passo a passo  
+✅ Configurações realizadas  
+✅ Troubleshooting e manutenção  
+✅ Próximos passos recomendados  
+
+**Use essa documentação para:**
+- Entender a arquitetura do deployment
+- Manter e atualizar o sistema
+- Resolver problemas de publicação
+- Planejar melhorias futuras
 
 ---
 
