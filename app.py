@@ -19,7 +19,7 @@ IS_STREAMLIT_CLOUD = os.environ.get('STREAMLIT_SERVER_HEADLESS') == 'true'
 
 if IS_STREAMLIT_CLOUD:
     DATA_DIR = "./data"
-    APP_URL = "https://sstg-e-social.streamlit.app"  # Será atualizado após deploy
+    APP_URL = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
 else:
     DATA_DIR = r"G:\Meu Drive\SSTG-E-Social"
     APP_URL = "http://192.168.77.2:8501"
