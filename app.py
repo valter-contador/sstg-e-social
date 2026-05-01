@@ -941,32 +941,34 @@ if menu == "🔐 Admin SSTG (Gestão)":
             "publicacao": ("🚀 DOCUMENTACAO_PUBLICACAO.md", "DOCUMENTACAO_PUBLICACAO.pdf", "Documentação de Publicação — Processo, recursos, arquitetura, troubleshooting")
         }
 
-        # Exibir 3 colunas com os documentos (layout melhor para 6 docs)
-        cols = st.columns(3)
-        for idx, (key, (titulo, pdf, descricao)) in enumerate(docs.items()):
-            with cols[idx]:
-                st.markdown(f"### {titulo.split()[0]}")
-                st.caption(descricao)
+        # Exibir 3 colunas com os documentos (layout em linhas de 3)
+        docs_list = list(docs.items())
+        for row_idx in range(0, len(docs_list), 3):
+            cols = st.columns(3)
+            for col_idx, (key, (titulo, pdf, descricao)) in enumerate(docs_list[row_idx:row_idx+3]):
+                with cols[col_idx]:
+                    st.markdown(f"### {titulo.split()[0]}")
+                    st.caption(descricao)
 
-                # Botão para selecionar (visualizar)
-                if st.button(f"Ler {titulo.split()[0]}", use_container_width=True, key=f"sel_{key}"):
-                    st.session_state.doc_view = key
-                    st.rerun()
+                    # Botão para selecionar (visualizar)
+                    if st.button(f"Ler {titulo.split()[0]}", use_container_width=True, key=f"sel_{key}"):
+                        st.session_state.doc_view = key
+                        st.rerun()
 
-                # Botão para baixar PDF
-                try:
-                    pdf_path = caminho(pdf)
-                    with open(pdf_path, 'rb') as f:
-                        st.download_button(
-                            label="⬇️ PDF",
-                            data=f.read(),
-                            file_name=pdf,
-                            mime="application/pdf",
-                            use_container_width=True,
-                            key=f"dl_pdf_{key}"
-                        )
-                except FileNotFoundError:
-                    st.warning("PDF não disponível")
+                    # Botão para baixar PDF
+                    try:
+                        pdf_path = caminho(pdf)
+                        with open(pdf_path, 'rb') as f:
+                            st.download_button(
+                                label="⬇️ PDF",
+                                data=f.read(),
+                                file_name=pdf,
+                                mime="application/pdf",
+                                use_container_width=True,
+                                key=f"dl_pdf_{key}"
+                            )
+                    except FileNotFoundError:
+                        st.warning("PDF não disponível")
 
         st.divider()
 
