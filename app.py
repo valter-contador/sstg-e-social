@@ -341,6 +341,14 @@ if menu == "🔐 Admin SSTG (Gestão)":
             st.session_state.doc_view = "checklist"
             st.rerun()
 
+        st.markdown("---")
+
+        # DOCUMENTAÇÃO DE PUBLICAÇÃO
+        st.markdown("**Publicação**")
+        if st.button("🚀 PUBLICAÇÃO", use_container_width=True, key="btn_publicacao"):
+            st.session_state.doc_view = "publicacao"
+            st.rerun()
+
         st.caption("Clique em um guia para visualizar")
 
     # ── VISUALIZADOR DE DOCUMENTAÇÃO ──────────────────────────────────────────
@@ -883,11 +891,12 @@ if menu == "🔐 Admin SSTG (Gestão)":
             "tutorial": ("👥 TUTORIAL.md", "TUTORIAL.pdf", "Tutorial Operacional — Passo a passo completo para usuários RH"),
             "instalacao": ("🚀 GUIA_INSTALACAO.md", "GUIA_INSTALACAO.pdf", "Guia de Instalação — Setup, configuração, Google Drive, deployment"),
             "tecnico": ("🔧 GUIA_TECNICO.md", "GUIA_TECNICO.pdf", "Documentação Técnica — Arquitetura, dados, fluxos, segurança"),
-            "checklist": ("✅ CHECKLIST_LANCAMENTO.md", "CHECKLIST_LANCAMENTO.pdf", "Checklist de Lançamento — Validação pré-produção (60+ itens)")
+            "checklist": ("✅ CHECKLIST_LANCAMENTO.md", "CHECKLIST_LANCAMENTO.pdf", "Checklist de Lançamento — Validação pré-produção (60+ itens)"),
+            "publicacao": ("🚀 DOCUMENTACAO_PUBLICACAO.md", "DOCUMENTACAO_PUBLICACAO.pdf", "Documentação de Publicação — Processo, recursos, arquitetura, troubleshooting")
         }
 
-        # Exibir 5 colunas com os documentos
-        cols = st.columns(5)
+        # Exibir 3 colunas com os documentos (layout melhor para 6 docs)
+        cols = st.columns(3)
         for idx, (key, (titulo, pdf, descricao)) in enumerate(docs.items()):
             with cols[idx]:
                 st.markdown(f"### {titulo.split()[0]}")
@@ -922,7 +931,8 @@ if menu == "🔐 Admin SSTG (Gestão)":
                 "tutorial": "TUTORIAL.md",
                 "instalacao": "GUIA_INSTALACAO.md",
                 "tecnico": "GUIA_TECNICO.md",
-                "checklist": "CHECKLIST_LANCAMENTO.md"
+                "checklist": "CHECKLIST_LANCAMENTO.md",
+                "publicacao": "DOCUMENTACAO_PUBLICACAO.md"
             }
 
             if st.session_state.doc_view in doc_selecionado:
