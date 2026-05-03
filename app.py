@@ -1137,88 +1137,88 @@ elif menu == "📊 Gestão das Respostas (RH)":
     nome_res = caminho(f"respostas_CNPJ_{cnpj_cod}.csv")
     df_acessos = carregar_dados(ARQUIVO_ACESSOS)
 
-        # ── Link do Questionário ───────────────────────────────────────────────
-        with st.expander("🔗 Link do Questionário para esta empresa"):
-            link_emp = f"{SHARE_URL}/?cnpj={cnpj_cod}"
-            st.code(link_emp, language=None)
-            st.caption(
-                "Copie e envie este link para os colaboradores da empresa. "
-                "Este é o link público que funciona em qualquer dispositivo, conectado à internet."
-            )
+    # ── Link do Questionário ───────────────────────────────────────────────
+    with st.expander("🔗 Link do Questionário para esta empresa"):
+        link_emp = f"{SHARE_URL}/?cnpj={cnpj_cod}"
+        st.code(link_emp, language=None)
+        st.caption(
+            "Copie e envie este link para os colaboradores da empresa. "
+            "Este é o link público que funciona em qualquer dispositivo, conectado à internet."
+        )
 
-        # ── Gerar Imagem de Compartilhamento ───────────────────────────────────
-        with st.expander("🖼️ Gerar QRCode do Questionário para Compartilhamento"):
-            st.info("Gere uma imagem com QR Code para compartilhar nas redes sociais ou enviar por email.")
+    # ── Gerar Imagem de Compartilhamento ───────────────────────────────────
+    with st.expander("🖼️ Gerar QRCode do Questionário para Compartilhamento"):
+        st.info("Gere uma imagem com QR Code para compartilhar nas redes sociais ou enviar por email.")
 
-            if COMPARTILHAMENTO_DISPONIVEL:
-                col_gerar, col_espacador = st.columns([2, 1])
+        if COMPARTILHAMENTO_DISPONIVEL:
+            col_gerar, col_espacador = st.columns([2, 1])
 
-                with col_gerar:
-                    if st.button("🎨 Gerar Imagem com QR Code", use_container_width=True, key="btn_gerar_img_rh"):
-                        try:
-                            nome_empresa = empresa_sel.split(" — CNPJ:")[0].strip()
+            with col_gerar:
+                if st.button("🎨 Gerar Imagem com QR Code", use_container_width=True, key="btn_gerar_img_rh"):
+                    try:
+                        nome_empresa = empresa_sel.split(" — CNPJ:")[0].strip()
 
-                            with st.spinner("Gerando imagem..."):
-                                img_bytes = gerar_imagem_compartilhamento_simples(
-                                    empresa_nome=nome_empresa,
-                                    cnpj=cnpj_cod,
-                                    app_url=SHARE_URL
-                                )
-
-                            st.success("Imagem gerada com sucesso!")
-
-                            # Exibir preview
-                            st.image(img_bytes, use_column_width=True, caption=f"Imagem de compartilhamento: {nome_empresa}")
-
-                            # Download button
-                            st.download_button(
-                                "⬇️ Baixar Imagem (PNG)",
-                                img_bytes,
-                                f"compartilhamento_{cnpj_cod}.png",
-                                "image/png",
-                                use_container_width=True
+                        with st.spinner("Gerando imagem..."):
+                            img_bytes = gerar_imagem_compartilhamento_simples(
+                                empresa_nome=nome_empresa,
+                                cnpj=cnpj_cod,
+                                app_url=SHARE_URL
                             )
 
-                            # Opções de compartilhamento
-                            st.divider()
-                            st.subheader("📤 Compartilhar Imagem com Colaboradores")
+                        st.success("Imagem gerada com sucesso!")
 
-                            col1, col2 = st.columns(2)
-                            with col1:
-                                whatsapp_link = f"https://wa.me/?text=Prezado(a)%20Colaborador(a)%2C%0A%0AConvido-o%20a%20participar%20da%20avaliação%20de%20Riscos%20Psicossociais%20(SSTG-DRPS)%20através%20do%20link%3A%20{SHARE_URL}%2F%3Fcnpj%3D{cnpj_cod}%0A%0AEsta%20é%20uma%20ferramenta%20essencial%20para%20diagnóstico%20do%20ambiente%20de%20trabalho%20conforme%20NR-1.%0A%0AObrigado!"
-                                st.markdown(f'<a href="{whatsapp_link}" target="_blank"><button style="width:100%; padding:10px; background-color:#25D366; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">📱 Enviar via WhatsApp</button></a>', unsafe_allow_html=True)
+                        # Exibir preview
+                        st.image(img_bytes, use_column_width=True, caption=f"Imagem de compartilhamento: {nome_empresa}")
 
-                            with col2:
-                                email_link = f"mailto:?subject=Convite - Avaliação de Riscos Psicossociais&body=Prezado(a) Colaborador(a),%0A%0AConvidamos-o a participar da avaliação de Riscos Psicossociais (SSTG-DRPS).%0A%0ALink para acesso:%0A{SHARE_URL}/?cnpj={cnpj_cod}%0A%0AEsta avaliação é fundamental para diagnóstico do ambiente de trabalho conforme NR-1.%0A%0AObrigado!"
-                                st.markdown(f'<a href="{email_link}"><button style="width:100%; padding:10px; background-color:#0078D4; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">📧 Enviar via Email</button></a>', unsafe_allow_html=True)
+                        # Download button
+                        st.download_button(
+                            "⬇️ Baixar Imagem (PNG)",
+                            img_bytes,
+                            f"compartilhamento_{cnpj_cod}.png",
+                            "image/png",
+                            use_container_width=True
+                        )
 
-                            st.caption("💡 Dica: Use esta imagem em emails, WhatsApp, Telegram ou redes sociais para aumentar a adesão ao questionário.")
+                        # Opções de compartilhamento
+                        st.divider()
+                        st.subheader("📤 Compartilhar Imagem com Colaboradores")
 
-                        except Exception as e:
-                            st.error(f"Erro ao gerar imagem: {e}")
-            else:
-                st.warning("Módulo de compartilhamento não disponível. Verifique se `qrcode` e `Pillow` estão instalados.")
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            whatsapp_link = f"https://wa.me/?text=Prezado(a)%20Colaborador(a)%2C%0A%0AConvido-o%20a%20participar%20da%20avaliação%20de%20Riscos%20Psicossociais%20(SSTG-DRPS)%20através%20do%20link%3A%20{SHARE_URL}%2F%3Fcnpj%3D{cnpj_cod}%0A%0AEsta%20é%20uma%20ferramenta%20essencial%20para%20diagnóstico%20do%20ambiente%20de%20trabalho%20conforme%20NR-1.%0A%0AObrigado!"
+                            st.markdown(f'<a href="{whatsapp_link}" target="_blank"><button style="width:100%; padding:10px; background-color:#25D366; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">📱 Enviar via WhatsApp</button></a>', unsafe_allow_html=True)
 
-        # ── Resultado das Respostas ────────────────────────────────────────────
-        st.divider()
-        st.subheader("📈 Resultado das Respostas")
+                        with col2:
+                            email_link = f"mailto:?subject=Convite - Avaliação de Riscos Psicossociais&body=Prezado(a) Colaborador(a),%0A%0AConvidamos-o a participar da avaliação de Riscos Psicossociais (SSTG-DRPS).%0A%0ALink para acesso:%0A{SHARE_URL}/?cnpj={cnpj_cod}%0A%0AEsta avaliação é fundamental para diagnóstico do ambiente de trabalho conforme NR-1.%0A%0AObrigado!"
+                            st.markdown(f'<a href="{email_link}"><button style="width:100%; padding:10px; background-color:#0078D4; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">📧 Enviar via Email</button></a>', unsafe_allow_html=True)
 
-        if os.path.exists(nome_res):
-            df_res = pd.read_csv(nome_res, sep=';', dtype=str)
+                        st.caption("💡 Dica: Use esta imagem em emails, WhatsApp, Telegram ou redes sociais para aumentar a adesão ao questionário.")
 
-            total_auth = len(df_acessos[df_acessos['CNPJ'] == cnpj_cod])
-            total_resp = len(df_res)
-            pct        = round((total_resp / total_auth) * 100, 1) if total_auth > 0 else 0
-
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Total de Colaboradores Autorizados", total_auth)
-            c2.metric("Respostas Recebidas", total_resp)
-            c3.metric("Taxa de Resposta", f"{pct}%")
-
-            st.info(f"✅ {total_resp} resposta(s) registrada(s) para esta empresa.")
-            st.dataframe(df_res, use_container_width=True)
+                    except Exception as e:
+                        st.error(f"Erro ao gerar imagem: {e}")
         else:
-            st.info("Nenhuma resposta registrada ainda para esta empresa.")
+            st.warning("Módulo de compartilhamento não disponível. Verifique se `qrcode` e `Pillow` estão instalados.")
+
+    # ── Resultado das Respostas ────────────────────────────────────────────
+    st.divider()
+    st.subheader("📈 Resultado das Respostas")
+
+    if os.path.exists(nome_res):
+        df_res = pd.read_csv(nome_res, sep=';', dtype=str)
+
+        total_auth = len(df_acessos[df_acessos['CNPJ'] == cnpj_cod])
+        total_resp = len(df_res)
+        pct        = round((total_resp / total_auth) * 100, 1) if total_auth > 0 else 0
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total de Colaboradores Autorizados", total_auth)
+        c2.metric("Respostas Recebidas", total_resp)
+        c3.metric("Taxa de Resposta", f"{pct}%")
+
+        st.info(f"✅ {total_resp} resposta(s) registrada(s) para esta empresa.")
+        st.dataframe(df_res, use_container_width=True)
+    else:
+        st.info("Nenhuma resposta registrada ainda para esta empresa.")
 
 # =============================================================================
 # MÓDULO QUESTIONÁRIO PSICOSSOCIAL
