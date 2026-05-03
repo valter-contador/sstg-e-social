@@ -160,21 +160,21 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
     # Título
     titulo = "SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"
     try:
-        fonte_titulo = ImageFont.truetype("arial.ttf", 40)
+        fonte_titulo = ImageFont.truetype("arial.ttf", 48)
     except:
         fonte_titulo = ImageFont.load_default()
 
-    draw.text((50, 50), titulo, fill=branco, font=fonte_titulo)
+    draw.text((50, 45), titulo, fill=branco, font=fonte_titulo)
 
     # Subtítulo
     subtitulo = "Avaliação de Riscos Psicossociais"
     try:
-        fonte_sub = ImageFont.truetype("arial.ttf", 24)
+        fonte_sub = ImageFont.truetype("arial.ttf", 28)
     except:
         fonte_sub = ImageFont.load_default()
 
-    draw.text((50, 200), subtitulo, fill=cor_navy, font=fonte_sub)
-    draw.text((50, 240), f"Empresa: {empresa_nome}", fill=cor_verde, font=fonte_sub)
+    draw.text((50, 190), subtitulo, fill=cor_navy, font=fonte_sub)
+    draw.text((50, 235), f"Empresa: {empresa_nome}", fill=cor_verde, font=fonte_sub)
 
     # Gerar QR Code
     link = f"{app_url}/?cnpj={cnpj}"

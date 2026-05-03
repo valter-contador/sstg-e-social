@@ -695,7 +695,7 @@ if menu == "🔐 Admin SSTG (Gestão)":
                 )
 
             # ── Gerar Imagem de Compartilhamento ──────────────────────────────────
-            with st.expander("🖼️ Gerar Imagem para Compartilhamento"):
+            with st.expander("🖼️ Gerar QRCode do Questionário para Compartilhamento"):
                 st.info("Gere uma imagem com QR Code para compartilhar nas redes sociais ou enviar por email.")
 
                 if COMPARTILHAMENTO_DISPONIVEL:
@@ -726,6 +726,19 @@ if menu == "🔐 Admin SSTG (Gestão)":
                                     "image/png",
                                     use_container_width=True
                                 )
+
+                                # Opções de compartilhamento
+                                st.divider()
+                                st.subheader("📤 Compartilhar Imagem com RH/Respondentes")
+
+                                col1, col2 = st.columns(2)
+                                with col1:
+                                    whatsapp_link = f"https://wa.me/?text=Prezado(a)%20RH%2C%0A%0AConvido-o%20a%20participar%20da%20avaliação%20de%20Riscos%20Psicossociais%20(SSTG-DRPS)%20através%20do%20link%3A%20{SHARE_URL}%2F%3Fcnpj%3D{cnpj_cod}%0A%0AEsta%20é%20uma%20ferramenta%20essencial%20para%20diagnóstico%20do%20ambiente%20de%20trabalho%20conforme%20NR-1.%0A%0AObrigado!"
+                                    st.markdown(f'<a href="{whatsapp_link}" target="_blank"><button style="width:100%; padding:10px; background-color:#25D366; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">📱 Enviar via WhatsApp</button></a>', unsafe_allow_html=True)
+
+                                with col2:
+                                    email_link = f"mailto:?subject=Avaliação de Riscos Psicossociais - SSTG DRPS&body=Prezado(a) RH,%0A%0AConvido-o a participar da avaliação de Riscos Psicossociais (SSTG-DRPS) conforme NR-1.%0A%0ALink para acesso:%0A{SHARE_URL}/?cnpj={cnpj_cod}%0A%0AEsta avaliação é fundamental para diagnóstico do ambiente de trabalho.%0A%0AObrigado!"
+                                    st.markdown(f'<a href="{email_link}"><button style="width:100%; padding:10px; background-color:#0078D4; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">📧 Enviar via Email</button></a>', unsafe_allow_html=True)
 
                                 st.caption("💡 Dica: Use esta imagem em emails, WhatsApp, Telegram ou redes sociais para aumentar a adesão ao questionário.")
 
