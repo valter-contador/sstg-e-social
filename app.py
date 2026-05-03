@@ -30,6 +30,9 @@ else:
     DATA_DIR = r"G:\Meu Drive\SSTG-E-Social"
     APP_URL = "http://192.168.77.2:8501"
 
+# URL pública para compartilhamento (sempre usa Streamlit Cloud)
+SHARE_URL = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
+
 def caminho(nome_arquivo: str) -> str:
     if DATA_DIR:
         os.makedirs(DATA_DIR, exist_ok=True)
@@ -571,17 +574,17 @@ if menu == "🔐 Admin SSTG (Gestão)":
                     st.error(f"❌ Erro ao ler arquivo: {str(e)}")
 
         st.divider()
-        st.subheader("🔗 Links para Compartilhar")
+        st.subheader("🔗 Link do Questionário para Compartilhar")
 
         df_emp_links = carregar_dados(ARQUIVO_ACESSOS)
         if not df_emp_links.empty:
             empresas_unicas = df_emp_links.drop_duplicates('CNPJ')[['Empresa', 'CNPJ']].values
             for _, (empresa, cnpj_emp) in enumerate(empresas_unicas):
-                link = f"{APP_URL}/?cnpj={cnpj_emp}"
+                link = f"{SHARE_URL}/?cnpj={cnpj_emp}"
                 col_empr, col_link = st.columns([2, 3])
                 col_empr.write(f"**{empresa}**")
                 col_link.code(link)
-            st.caption("Copie e envie o link correspondente ao RH da empresa.")
+            st.caption("Copie e envie o link correspondente ao RH da empresa via WhatsApp, Email ou outro canal.")
         else:
             st.info("Nenhuma empresa registrada ainda.")
 
@@ -700,7 +703,7 @@ if menu == "🔐 Admin SSTG (Gestão)":
                                     img_bytes = gerar_imagem_compartilhamento_simples(
                                         empresa_nome=nome_empresa,
                                         cnpj=cnpj_cod,
-                                        app_url=APP_URL
+                                        app_url=SHARE_URL
                                     )
 
                                 st.success("Imagem gerada com sucesso!")
