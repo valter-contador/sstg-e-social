@@ -266,6 +266,9 @@ with st.sidebar:
                 </span><br>
                 <span style="font-size:0.75em; color:rgba(255,255,255,0.65); letter-spacing:2px;">
                     GESTÃO OCUPACIONAL
+                </span><br>
+                <span style="font-size:1.1em; font-weight:800; color:white; letter-spacing:1px; margin-top:8px; display:block;">
+                    DRPS
                 </span>
             </div>
         """, unsafe_allow_html=True)
