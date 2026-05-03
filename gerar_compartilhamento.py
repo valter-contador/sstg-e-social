@@ -141,40 +141,54 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
     Gera imagem de compartilhamento com QR Code
     """
 
-    # Dimensões (aumentadas para acomodar fontes maiores)
-    largura, altura = 1200, 750
+    # Dimensões
+    largura, altura = 1280, 720
 
     # Cores SSTG
     cor_navy = (40, 44, 91)
     cor_verde = (90, 159, 98)
     branco = (255, 255, 255)
-    cinza = (200, 200, 200)
+    cinza_claro = (180, 180, 180)
+    cinza_medio = (150, 150, 150)
 
     # Criar imagem
     img = Image.new('RGB', (largura, altura), branco)
     draw = ImageDraw.Draw(img)
 
-    # Fundo colorido no topo
-    draw.rectangle([(0, 0), (largura, 180)], fill=cor_navy)
+    # Fundo colorido no topo (header)
+    altura_header = 130
+    draw.rectangle([(0, 0), (largura, altura_header)], fill=cor_navy)
 
-    # Título
-    titulo = "SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"
+    # Texto pequeno no topo do header (cinza claro)
+    texto_pequeno = "SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"
     try:
-        fonte_titulo = ImageFont.truetype("arial.ttf", 72)
+        fonte_pequena = ImageFont.truetype("arial.ttf", 11)
+    except:
+        fonte_pequena = ImageFont.load_default()
+    draw.text((40, 12), texto_pequeno, fill=cinza_claro, font=fonte_pequena)
+
+    # Título principal (branco, grande)
+    titulo = "SSTG - DRPS Diagnóstico de Riscos Psicossociais"
+    try:
+        fonte_titulo = ImageFont.truetype("arial.ttf", 62)
     except:
         fonte_titulo = ImageFont.load_default()
+    draw.text((40, 45), titulo, fill=branco, font=fonte_titulo)
 
-    draw.text((50, 25), titulo, fill=branco, font=fonte_titulo)
-
-    # Subtítulo
-    subtitulo = "Avaliação de Riscos Psicossociais"
+    # Empresa (verde, grande)
     try:
-        fonte_sub = ImageFont.truetype("arial.ttf", 42)
+        fonte_empresa = ImageFont.truetype("arial.ttf", 32)
     except:
-        fonte_sub = ImageFont.load_default()
+        fonte_empresa = ImageFont.load_default()
 
-    draw.text((50, 170), subtitulo, fill=cor_navy, font=fonte_sub)
-    draw.text((50, 230), f"Empresa: {empresa_nome}", fill=cor_verde, font=fonte_sub)
+    # Texto de label pequeno para empresa
+    try:
+        fonte_label = ImageFont.truetype("arial.ttf", 12)
+    except:
+        fonte_label = ImageFont.load_default()
+
+    draw.text((40, 185), "Empresa:", fill=cinza_medio, font=fonte_label)
+    draw.text((40, 215), f"{empresa_nome}", fill=cor_verde, font=fonte_empresa)
 
     # Gerar QR Code
     link = f"{app_url}/?cnpj={cnpj}"
@@ -188,12 +202,31 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
     qr.make(fit=True)
 
     qr_img = qr.make_image(fill_color=cor_navy, back_color=branco)
-    qr_tamanho = 180
+    qr_tamanho = 200
     qr_img = qr_img.resize((qr_tamanho, qr_tamanho), Image.Resampling.LANCZOS)
 
     # Colar QR Code
     x_qr = (largura - qr_tamanho) // 2
-    img.paste(qr_img, (x_qr, 380))
+    y_qr = 360
+    img.paste(qr_img, (x_qr, y_qr))
+
+    # Rodapé
+    cor_fundo_rodape = (240, 240, 240)
+    altura_rodape = 50
+    draw.rectangle([(0, altura - altura_rodape), (largura, altura)], fill=cor_fundo_rodape)
+
+    # Texto do rodapé
+    texto_rodape = f"Imagem de compartilhamento: {empresa_nome}"
+    try:
+        fonte_rodape = ImageFont.truetype("arial.ttf", 11)
+    except:
+        fonte_rodape = ImageFont.load_default()
+
+    # Centralizar texto do rodapé
+    bbox = draw.textbbox((0, 0), texto_rodape, font=fonte_rodape)
+    largura_texto = bbox[2] - bbox[0]
+    x_rodape = (largura - largura_texto) // 2
+    draw.text((x_rodape, altura - 35), texto_rodape, fill=cinza_medio, font=fonte_rodape)
 
     # Converter para BytesIO
     img_io = io.BytesIO()
