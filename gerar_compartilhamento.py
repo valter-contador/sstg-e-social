@@ -141,8 +141,8 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
     Gera imagem de compartilhamento com QR Code
     """
 
-    # Dimensões
-    largura, altura = 1000, 600
+    # Dimensões (aumentadas para acomodar fontes maiores)
+    largura, altura = 1200, 750
 
     # Cores SSTG
     cor_navy = (40, 44, 91)
@@ -155,26 +155,26 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
     draw = ImageDraw.Draw(img)
 
     # Fundo colorido no topo
-    draw.rectangle([(0, 0), (largura, 150)], fill=cor_navy)
+    draw.rectangle([(0, 0), (largura, 180)], fill=cor_navy)
 
     # Título
     titulo = "SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"
     try:
-        fonte_titulo = ImageFont.truetype("arial.ttf", 48)
+        fonte_titulo = ImageFont.truetype("arial.ttf", 72)
     except:
         fonte_titulo = ImageFont.load_default()
 
-    draw.text((50, 45), titulo, fill=branco, font=fonte_titulo)
+    draw.text((50, 25), titulo, fill=branco, font=fonte_titulo)
 
     # Subtítulo
     subtitulo = "Avaliação de Riscos Psicossociais"
     try:
-        fonte_sub = ImageFont.truetype("arial.ttf", 28)
+        fonte_sub = ImageFont.truetype("arial.ttf", 42)
     except:
         fonte_sub = ImageFont.load_default()
 
-    draw.text((50, 190), subtitulo, fill=cor_navy, font=fonte_sub)
-    draw.text((50, 235), f"Empresa: {empresa_nome}", fill=cor_verde, font=fonte_sub)
+    draw.text((50, 170), subtitulo, fill=cor_navy, font=fonte_sub)
+    draw.text((50, 230), f"Empresa: {empresa_nome}", fill=cor_verde, font=fonte_sub)
 
     # Gerar QR Code
     link = f"{app_url}/?cnpj={cnpj}"
@@ -193,7 +193,7 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
 
     # Colar QR Code
     x_qr = (largura - qr_tamanho) // 2
-    img.paste(qr_img, (x_qr, 320))
+    img.paste(qr_img, (x_qr, 380))
 
     # Converter para BytesIO
     img_io = io.BytesIO()
