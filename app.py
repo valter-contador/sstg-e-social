@@ -261,6 +261,13 @@ st.markdown("""
 with st.sidebar:
     if os.path.exists("logo_sstg.png"):
         st.image("logo_sstg.png", use_container_width=True)
+        st.markdown("""
+            <div style="text-align:center; padding: 0 0 10px 0;">
+                <span style="font-size:1.1em; font-weight:800; color:white; letter-spacing:1px;">
+                    DRPS
+                </span>
+            </div>
+        """, unsafe_allow_html=True)
     else:
         st.markdown("""
             <div style="text-align:center; padding: 10px 0 20px 0;">
