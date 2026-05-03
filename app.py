@@ -686,12 +686,11 @@ if menu == "🔐 Admin SSTG (Gestão)":
 
             # ── Link individualizado ──────────────────────────────────────────
             with st.expander("🔗 Link do Questionário para esta empresa"):
-                link_emp = f"{APP_URL}/?cnpj={cnpj_cod}"
+                link_emp = f"{SHARE_URL}/?cnpj={cnpj_cod}"
                 st.code(link_emp, language=None)
                 st.caption(
-                    "Copie e envie para o RH da empresa repassar aos colaboradores. "
-                    "Se o app estiver publicado online, substitua o endereço base acima "
-                    "na variável `APP_URL` no início do arquivo `app.py`."
+                    "Copie e envie este link para o RH da empresa repassar aos colaboradores. "
+                    "Este é o link público que funciona em qualquer dispositivo, conectado à internet."
                 )
 
             # ── Gerar Imagem de Compartilhamento ──────────────────────────────────
