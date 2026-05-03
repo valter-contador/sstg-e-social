@@ -1,4 +1,4 @@
-# ✅ Checklist de Lançamento — SSTG E-Social v6.0
+# ✅ Checklist de Lançamento — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0
 
 **Data:** 30/04/2026  
 **Responsável:** _______________  
@@ -348,5 +348,5 @@ _________________________________________________________________
 
 ---
 
-**Checklist de Lançamento — SSTG E-Social v6.0**  
+**Checklist de Lançamento — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0**  
 **Última atualização: 30/04/2026**

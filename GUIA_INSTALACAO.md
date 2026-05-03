@@ -176,7 +176,7 @@ DATA_DIR = ""
 #### Opção B: Armazenamento Google Drive
 
 ```python
-DATA_DIR = r"G:\Meu Drive\SSTG E-Social\dados"
+DATA_DIR = r"G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados"
 ```
 
 **Pré-requisito:** Google Drive Desktop instalado e pasta sincronizada
@@ -184,8 +184,8 @@ DATA_DIR = r"G:\Meu Drive\SSTG E-Social\dados"
 **Como fazer:**
 1. Instale Google Drive Desktop: https://support.google.com/drive/answer/7329379
 2. Configure sincronização para uma pasta local
-3. Crie pasta `SSTG E-Social\dados`
-4. Copie o caminho: `G:\Meu Drive\SSTG E-Social\dados`
+3. Crie pasta `SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados`
+4. Copie o caminho: `G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados`
 5. Altere a variável no código
 
 **Exemplo:**
@@ -194,7 +194,7 @@ DATA_DIR = r"G:\Meu Drive\SSTG E-Social\dados"
 DATA_DIR = ""
 
 # Depois:
-DATA_DIR = r"G:\Meu Drive\SSTG E-Social\dados"
+DATA_DIR = r"G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados"
 ```
 
 ---
@@ -270,7 +270,7 @@ SENHA_ADMIN = "Minha@Senha123"
 
 1. Google Drive Desktop → Configurações
 2. Ativa: "Sincronizar para este computador"
-3. Selecione a pasta `SSTG E-Social` (crie se não existir)
+3. Selecione a pasta `SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)` (crie se não existir)
 4. Clique em "Iniciar sincronização"
 
 ### Passo 3: Confirmar Caminho
@@ -280,7 +280,7 @@ SENHA_ADMIN = "Minha@Senha123"
 # Vá para: Google Drive (disco G:\ ou outro)
 # Copie o caminho completo da pasta
 
-# Exemplo: G:\Meu Drive\SSTG E-Social\dados
+# Exemplo: G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados
 ```
 
 ### Passo 4: Atualizar Configuração
@@ -289,7 +289,7 @@ SENHA_ADMIN = "Minha@Senha123"
 
 ```python
 # Linha ~18
-DATA_DIR = r"G:\Meu Drive\SSTG E-Social\dados"
+DATA_DIR = r"G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados"
 ```
 
 ### Passo 5: Reiniciar App
@@ -534,5 +534,5 @@ py -m streamlit run app.py --server.port 8502
 
 ---
 
-**Guia de Instalação — SSTG E-Social v6.0**  
+**Guia de Instalação — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0**  
 **Última atualização: 30/04/2026**

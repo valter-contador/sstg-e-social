@@ -1,4 +1,4 @@
-# 📚 SSTG E-Social — Tutorial Operacional
+# 📚 SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) — Tutorial Operacional
 
 **Versão:** 6.1  
 **Data:** 30/04/2026 (Atualizado)  
@@ -51,7 +51,7 @@ Ao acessar a URL, você verá:
 
 ```
 ┌────────────────────────────────────────────┐
-│  SSTG E-Social — Avaliação Psicossocial   │
+│  SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) — Avaliação Psicossocial   │
 │                                            │
 │  [Dropdown] Módulo:                        │
 │  ⭕ Questionário Psicossocial              │
@@ -113,7 +113,7 @@ Na **Aba 1 — Cadastro**, clique em: **✏️ Entrada Manual**
 ```
 CNPJ (somente números)           Razão Social
 [__________________]             [___________________]
-Ex: 49405001000105              Ex: SSTG E-Social Ltda
+Ex: 49405001000105              Ex: SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda
 ```
 
 ### Passo 3: Definir Período de Aplicação
@@ -282,7 +282,7 @@ Na **Aba 1 — Cadastro**, scroll down até: **🔗 Links para Compartilhar**
 │  🔗 Links para Compartilhar                                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Empresa 1: SSTG E-Social Ltda                              │
+│  Empresa 1: SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda                              │
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │ http://192.168.77.2:8501/?cnpj=49405001000105     │   │
 │  └─────────────────────────────────────────────────────┘   │
@@ -345,7 +345,7 @@ A imagem gerada conterá:
 ┌──────────────────────────────────────┐
 │ SSTG E-SOCIAL (branco sobre azul)    │
 │ Avaliação de Riscos Psicossociais    │
-│ Empresa: SSTG E-Social Ltda          │
+│ Empresa: SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda          │
 │                                      │
 │          [QR CODE]                   │
 │         (escanear)                   │
@@ -396,7 +396,7 @@ Ao abrir o link, o colaborador verá:
 │  ⏱️ ~10 minutos          🏆 Protocolo Validado          │
 │                                                         │
 │  🏢 Você está respondendo o questionário de:            │
-│     **SSTG E-Social Ltda**                              │
+│     **SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda**                              │
 │                                                         │
 │  Participe da nossa pesquisa de fatores psicossociais! │
 │  É rápido, totalmente anônima e essencial...           │
@@ -524,7 +524,7 @@ Autorizados vs Respondidos
 │  Gerar Laudo Psicossocial (PDF)     │
 │                                     │
 │  Selecione a Empresa:               │
-│  [SSTG E-Social Ltda    ▼]          │
+│  [SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda    ▼]          │
 │                                     │
 │  [📄 GERAR E BAIXAR LAUDO PDF]      │
 └─────────────────────────────────────┘
@@ -574,7 +574,7 @@ Autorizados vs Respondidos
 │  Altere as datas para reabrir ou encerrar o período.   │
 │                                                         │
 │  Selecione empresa:                                     │
-│  [SSTG E-Social — CNPJ: 49405001000105 ▼]             │
+│  [SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) — CNPJ: 49405001000105 ▼]             │
 │                                                         │
 │  Nova data de início                                    │
 │  [__________]  (Atualmente: 30/04/2026)               │
@@ -792,5 +792,5 @@ Para dúvidas técnicas ou problemas, contacte a equipe SSTG.
 ---
 
 **Documento preparado para treinamento interno**  
-**SSTG E-Social Gestão Ocupacional**  
+**SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Gestão Ocupacional**  
 **Sistema versão 6.0**

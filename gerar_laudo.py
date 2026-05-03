@@ -260,7 +260,7 @@ def _header_footer(canvas_obj, doc, empresa=""):
     canvas_obj.setFillColor(C_BRANCO)
     canvas_obj.setFont("Helvetica", 6.5)
     canvas_obj.drawCentredString(w / 2, 0.22*cm,
-        f"SSTG E-Social — Gestão Ocupacional  |  Laudo de Fatores Psicossociais  |  {empresa}  |  Documento Confidencial")
+        f"SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) — Gestão Ocupacional  |  Laudo de Fatores Psicossociais  |  {empresa}  |  Documento Confidencial")
 
     canvas_obj.restoreState()
 

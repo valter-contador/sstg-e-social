@@ -1,4 +1,4 @@
-# 📚 Documentação de Publicação — SSTG E-Social v6.0
+# 📚 Documentação de Publicação — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0
 
 **Versão:** 1.0  
 **Data:** 30/04/2026  
@@ -22,7 +22,7 @@
 
 ## 📌 Resumo Executivo
 
-O SSTG E-Social v6.0 foi publicado com sucesso na plataforma **Streamlit Cloud**, tornando o sistema acessível online para empresas e colaboradores em qualquer lugar.
+O SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0 foi publicado com sucesso na plataforma **Streamlit Cloud**, tornando o sistema acessível online para empresas e colaboradores em qualquer lugar.
 
 ### Principais Características da Publicação
 
@@ -218,7 +218,7 @@ touch data/.gitkeep
 git add .
 
 # Comando 5: Primeiro commit
-git commit -m "Initial commit - SSTG E-Social v6.0 ready for Streamlit Cloud"
+git commit -m "Initial commit - SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0 ready for Streamlit Cloud"
 ```
 
 **Resultado:**
@@ -403,7 +403,7 @@ sstg-e-social/
 | Teste | Resultado | Detalhes |
 |-------|-----------|----------|
 | URL Acessível | ✅ PASS | Carrega homepage |
-| Logo e Branding | ✅ PASS | SSTG E-Social exibido |
+| Logo e Branding | ✅ PASS | SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) exibido |
 | Menu Lateral | ✅ PASS | Opções Questionnaire e Admin |
 | Interface Responsiva | ✅ PASS | Layout correto em desktop |
 | Carregamento Rápido | ✅ PASS | <3s primeira carga |
@@ -580,5 +580,5 @@ git push origin main
 ---
 
 **Documento Preparado:** 30/04/2026  
-**Responsável:** Sistema SSTG E-Social v6.0  
+**Responsável:** Sistema SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0  
 **Status:** ✅ Sistema Operacional

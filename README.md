@@ -1,4 +1,4 @@
-# 📚 SSTG E-Social — Avaliação de Riscos Psicossociais (COPSOQ III)
+# 📚 SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) — Avaliação de Riscos Psicossociais (COPSOQ III)
 
 **Versão:** 6.0  
 **Atualizado:** 30/04/2026  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 O que é SSTG E-Social?
+## 🎯 O que é SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)?
 
 Sistema **web-based** para coleta, análise e geração de **laudos de riscos psicossociais** utilizando o **protocolo COPSOQ III** (Copenhagen Psychosocial Questionnaire).
 
@@ -350,7 +350,7 @@ R: Gratuito. Streamlit Cloud tem versão free.
 
 ## 📄 Licença
 
-Desenvolvido para **SSTG E-Social Gestão Ocupacional**  
+Desenvolvido para **SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Gestão Ocupacional**  
 Versão 6.0 — Abril/2026
 
 ---

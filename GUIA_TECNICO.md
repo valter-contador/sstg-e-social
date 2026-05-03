@@ -1,4 +1,4 @@
-# 🔧 Guia Técnico SSTG E-Social
+# 🔧 Guia Técnico SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)
 
 **Versão:** 6.0  
 **Data:** 30/04/2026  
@@ -71,7 +71,7 @@
 | Campo | Tipo | Exemplo | Descrição |
 |-------|------|---------|-----------|
 | CPF | string | 06320453451 | 11 dígitos, sem formatação |
-| Empresa | string | SSTG E-Social Ltda | Nome da empresa |
+| Empresa | string | SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda | Nome da empresa |
 | CNPJ | string | 49405001000105 | 14 dígitos, sem formatação |
 | Função | string | Assist. Adm | Cargo/posição |
 | Departamento | string | Atendimento | Setor |
@@ -85,7 +85,7 @@
 **Exemplo:**
 ```csv
 CPF;Empresa;CNPJ;Função;Departamento;Data_Acesso_Liberado;Data_Inicio_Periodo;Data_Fim_Periodo;Status;Data_Movimentacao;Motivo_Movimentacao
-06320453451;SSTG E-Social Ltda;49405001000105;Assist. Adm;Atendimento;30/04/2026;30/04/2026;30/05/2026;Ativo;;
+06320453451;SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) Ltda;49405001000105;Assist. Adm;Atendimento;30/04/2026;30/04/2026;30/05/2026;Ativo;;
 ```
 
 ### Arquivo: `respostas_CNPJ_XXXXX.csv`
@@ -303,7 +303,7 @@ CPF;Empresa;CNPJ;Função;Departamento;Data_Acesso_Liberado;Data_Inicio_Periodo;
 ```python
 # ─── DIRETÓRIO DE DADOS ───────────────────────────────────
 DATA_DIR = ""  # Local vazio = pasta do projeto
-# Para Google Drive, use: r"G:\Meu Drive\SSTG E-Social\dados"
+# Para Google Drive, use: r"G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados"
 
 # ─── URL BASE ─────────────────────────────────────────────
 APP_URL = "http://192.168.77.2:8501"  # Atualizar para URL de produção
@@ -346,7 +346,7 @@ C:\Users\valte\Claude\
 
 **Google Drive (Configurado):**
 ```
-G:\Meu Drive\SSTG E-Social\dados\
+G:\Meu Drive\SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)\dados\
 ├── db_acessos_autorizados.csv
 └── respostas_CNPJ_*.csv
 ```
@@ -531,4 +531,4 @@ py -m pip install streamlit pandas reportlab
 
 ---
 
-**Documento técnico — SSTG E-Social v6.0**
+**Documento técnico — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0**

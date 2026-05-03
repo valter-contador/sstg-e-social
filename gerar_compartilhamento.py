@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Gerador de Imagens para Compartilhamento - SSTG E-Social"""
+"""Gerador de Imagens para Compartilhamento - SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"""
 
 import io
 import qrcode
@@ -158,7 +158,7 @@ def gerar_imagem_compartilhamento_simples(empresa_nome: str, cnpj: str, app_url:
     draw.rectangle([(0, 0), (largura, 150)], fill=cor_navy)
 
     # Título
-    titulo = "SSTG E-Social"
+    titulo = "SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"
     try:
         fonte_titulo = ImageFont.truetype("arial.ttf", 40)
     except:

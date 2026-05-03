@@ -214,7 +214,7 @@ DIMS_INVERTIDAS = {"Demandas", "Relacionamentos"}
 
 # ─── CONFIGURAÇÃO DA PÁGINA ───────────────────────────────────────────────────
 st.set_page_config(
-    page_title="SSTG E-Social — Diagnóstico Psicossocial",
+    page_title="SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) — Diagnóstico Psicossocial",
     layout="wide",
     page_icon="🧠"
 )
@@ -929,7 +929,7 @@ if menu == "🔐 Admin SSTG (Gestão)":
 
     # ── ABA 5: DOCUMENTAÇÃO ───────────────────────────────────────────────────
     with t5:
-        st.subheader("📚 Documentação SSTG E-Social")
+        st.subheader("📚 Documentação SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)")
         st.info("Acesse os guias e tutoriais disponíveis. Use o menu da barra lateral para selecionar.")
 
         docs = {

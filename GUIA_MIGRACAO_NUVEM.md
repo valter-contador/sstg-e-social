@@ -1,4 +1,4 @@
-# ☁️ Guia de Migração para Nuvem — SSTG E-Social
+# ☁️ Guia de Migração para Nuvem — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)
 
 **Versão:** 1.0  
 **Data:** 30/04/2026  
@@ -162,7 +162,7 @@ git config user.email "seu.email@example.com"
 git add .
 
 # Primeiro commit
-git commit -m "Initial commit - SSTG E-Social v6.0"
+git commit -m "Initial commit - SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0"
 
 # Adicione repositório remoto
 git remote add origin https://github.com/seu-usuario/sstg-e-social.git
@@ -384,5 +384,5 @@ git credential-manager-core erase https://github.com
 
 ---
 
-**Guia de Migração — SSTG E-Social v6.0**  
+**Guia de Migração — SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) v6.0**  
 **Última atualização: 30/04/2026**

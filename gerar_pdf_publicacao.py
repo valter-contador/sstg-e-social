@@ -23,7 +23,7 @@ def markdown_para_pdf(md_file, pdf_file):
         leftMargin=0.75*inch,
         topMargin=0.75*inch,
         bottomMargin=0.75*inch,
-        title="SSTG E-Social - Documentação de Publicação"
+        title="SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1) - Documentação de Publicação"
     )
 
     styles = getSampleStyleSheet()

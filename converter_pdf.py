@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Converter Markdown para PDF - SSTG E-Social"""
+"""Converter Markdown para PDF - SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"""
 
 import subprocess
 import os

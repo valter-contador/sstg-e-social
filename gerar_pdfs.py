@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Gerar PDFs a partir de Markdown - SSTG E-Social"""
+"""Gerar PDFs a partir de Markdown - SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"""
 
 import re
 from pathlib import Path
@@ -25,7 +25,7 @@ def markdown_para_pdf(md_file, pdf_file):
         leftMargin=0.75*inch,
         topMargin=0.75*inch,
         bottomMargin=0.75*inch,
-        title="SSTG E-Social"
+        title="SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)"
     )
 
     # Estilos customizados
@@ -164,7 +164,7 @@ def main():
     """Funcao principal"""
 
     print("\n" + "=" * 70)
-    print("  CONVERSOR MARKDOWN PARA PDF - SSTG E-Social")
+    print("  CONVERSOR MARKDOWN PARA PDF - SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)")
     print("=" * 70)
 
     dir_projeto = Path("C:\\Users\\valte\\Claude")
