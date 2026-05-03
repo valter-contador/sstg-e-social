@@ -436,11 +436,12 @@ if menu == "🔐 Admin SSTG (Gestão)":
             except FileNotFoundError:
                 st.sidebar.warning("Arquivo de documentação não encontrado")
 
-    t1, t2, t3, t4, t5 = st.tabs([
+    t1, t2, t3, t4, t5, t6 = st.tabs([
         "🆕 Cadastro / Inclusão",
         "📋 Conferência e Correção",
         "📊 Resultados",
         "🔄 Movimentação de Pessoal",
+        "🔐 Segurança e Acesso RH",
         "📚 Documentação"
     ])
 
@@ -999,8 +1000,52 @@ if menu == "🔐 Admin SSTG (Gestão)":
                             else:
                                 st.error(msg)
 
-    # ── ABA 5: DOCUMENTAÇÃO ───────────────────────────────────────────────────
+    # ── ABA 5: SEGURANÇA E ACESSO RH ──────────────────────────────────────────
     with t5:
+        st.subheader("🔐 Segurança e Acesso RH")
+        st.info("Gere ou redefina senhas de acesso para o módulo 'Gestão das Respostas (RH)'")
+
+        df_acessos = carregar_dados(ARQUIVO_ACESSOS)
+
+        if not df_acessos.empty:
+            # Seleção de empresa
+            empresas_unicas = df_acessos.drop_duplicates('CNPJ')[['Empresa', 'CNPJ']].apply(
+                lambda r: f"{r['Empresa']} — CNPJ: {r['CNPJ']}", axis=1
+            ).tolist()
+
+            empresa_sel = st.selectbox("Selecione a empresa para gerar nova senha RH:", empresas_unicas, key="seg_empresa_sel")
+            cnpj_cod = empresa_sel.split("CNPJ: ")[-1]
+            nome_empresa = empresa_sel.split(" — CNPJ:")[0].strip()
+
+            st.divider()
+
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                st.write(f"**Empresa:** {nome_empresa}")
+                st.write(f"**CNPJ:** {cnpj_cod}")
+
+            with col2:
+                if st.button("🔐 Gerar Nova Senha RH", use_container_width=True, key="btn_gerar_senha"):
+                    # Gerar nova senha
+                    nova_senha = gerar_senha_rh()
+
+                    # Atualizar arquivo de acessos
+                    df_acessos.loc[df_acessos['CNPJ'] == cnpj_cod, 'Senha_RH_Hash'] = hash_senha(nova_senha)
+                    df_acessos.to_csv(ARQUIVO_ACESSOS, index=False, sep=';', encoding='utf-8-sig')
+
+                    st.success("✅ Nova senha gerada com sucesso!")
+                    st.divider()
+
+                    st.subheader("🔐 Credenciais Atualizadas")
+                    st.info(f"Empresa: **{nome_empresa}**\nCNPJ: **{cnpj_cod}**")
+                    st.code(f"Nova Senha de Acesso RH: {nova_senha}", language=None)
+                    st.warning("⚠️ **Anote esta senha com segurança!** Compartilhe-a com o RH da empresa. Esta é a única vez que ela será exibida.")
+
+        else:
+            st.info("Nenhuma empresa cadastrada no sistema.")
+
+    # ── ABA 6: DOCUMENTAÇÃO ───────────────────────────────────────────────────
+    with t6:
         st.subheader("📚 Documentação SSTG - DRPS Diagnóstico de Riscos Psicossociais (NR-1)")
         st.info("Acesse os guias e tutoriais disponíveis. Use o menu da barra lateral para selecionar.")
 
