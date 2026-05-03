@@ -1022,8 +1022,8 @@ else:
 
         st.markdown("""
             <div class="hero-sstg">
-                <h1>Avaliação de Riscos Psicossociais</h1>
-                <p>Protocolo COPSOQ III — Diagnóstico do Ambiente de Trabalho</p>
+                <h1>DRPS - Diagnóstico de Riscos Psicossociais</h1>
+                <p>Protocolo COPSOQ III — Diagnóstico do Ambiente de Trabalho<br>mensurado com a Escala de Avaliação (Likert)</p>
                 <div class="trust-row">
                     <div class="trust-badge">
                         <div class="icon">🔒</div>
