@@ -3,6 +3,8 @@ import pandas as pd
 import os
 import hashlib
 import re
+import secrets
+import string
 from datetime import datetime, date
 
 try:
@@ -55,6 +57,15 @@ def carregar_dados(arquivo: str) -> pd.DataFrame:
 
 def hash_cpf(cpf: str) -> str:
     return hashlib.sha256(cpf.encode()).hexdigest()
+
+def gerar_senha_rh() -> str:
+    """Gera uma senha segura de 8 caracteres para acesso RH"""
+    caracteres = string.ascii_uppercase + string.digits
+    return ''.join(secrets.choice(caracteres) for _ in range(8))
+
+def hash_senha(senha: str) -> str:
+    """Faz hash da senha para armazenamento seguro"""
+    return hashlib.sha256(senha.encode()).hexdigest()
 
 def cpf_ja_respondeu(cnpj: str, cpf: str) -> bool:
     arq = caminho(f"respostas_CNPJ_{cnpj}.csv")
@@ -493,10 +504,28 @@ if menu == "🔐 Admin SSTG (Gestão)":
                                 "Data_Fim":    dt_fim.strftime("%d/%m/%Y"),
                             }
                             novos, duplicados, invalidos = salvar_cadastro_completo(dados_emp, colaboradores)
+
+                            # Gerar senha de acesso RH
                             if novos:
+                                senha_rh = gerar_senha_rh()
+                                # Salvar senha hash no arquivo de acessos (em nova coluna)
+                                df_acessos = carregar_dados(ARQUIVO_ACESSOS)
+                                if 'Senha_RH_Hash' not in df_acessos.columns:
+                                    df_acessos['Senha_RH_Hash'] = ''
+                                df_acessos.loc[df_acessos['CNPJ'] == cnpj_limpo, 'Senha_RH_Hash'] = hash_senha(senha_rh)
+                                df_acessos.to_csv(ARQUIVO_ACESSOS, index=False, sep=';', encoding='utf-8-sig')
+
                                 st.success(f"✅ {len(novos)} colaborador(es) cadastrado(s) com sucesso.")
                                 st.session_state.cnpj_registrado = cnpj_limpo
                                 st.session_state.razao_registrada = razao.strip()
+
+                                # Exibir informações de acesso RH
+                                st.divider()
+                                st.subheader("🔐 Credenciais de Acesso RH")
+                                st.info(f"Empresa: **{razao.strip()}**\nCNPJ: **{cnpj_limpo}**")
+                                st.code(f"Senha de Acesso RH: {senha_rh}", language=None)
+                                st.warning("⚠️ **Anote esta senha com segurança!** Esta é a única vez que ela será exibida. Compartilhe com o RH da empresa.")
+
                             if duplicados:
                                 st.warning(f"⚠️ CPF(s) já cadastrados: {', '.join(duplicados)}")
                             if invalidos:
@@ -569,10 +598,28 @@ if menu == "🔐 Admin SSTG (Gestão)":
                                         "Data_Fim":    dt_fim_csv.strftime("%d/%m/%Y"),
                                     }
                                     novos, duplicados, invalidos = salvar_cadastro_completo(dados_emp_csv, colaboradores_csv)
+
+                                    # Gerar senha de acesso RH
                                     if novos:
+                                        senha_rh = gerar_senha_rh()
+                                        # Salvar senha hash no arquivo de acessos
+                                        df_acessos = carregar_dados(ARQUIVO_ACESSOS)
+                                        if 'Senha_RH_Hash' not in df_acessos.columns:
+                                            df_acessos['Senha_RH_Hash'] = ''
+                                        df_acessos.loc[df_acessos['CNPJ'] == cnpj_limpo_csv, 'Senha_RH_Hash'] = hash_senha(senha_rh)
+                                        df_acessos.to_csv(ARQUIVO_ACESSOS, index=False, sep=';', encoding='utf-8-sig')
+
                                         st.success(f"✅ {len(novos)} colaborador(es) cadastrado(s) com sucesso.")
                                         st.session_state.cnpj_registrado = cnpj_limpo_csv
                                         st.session_state.razao_registrada = razao_csv.strip()
+
+                                        # Exibir informações de acesso RH
+                                        st.divider()
+                                        st.subheader("🔐 Credenciais de Acesso RH")
+                                        st.info(f"Empresa: **{razao_csv.strip()}**\nCNPJ: **{cnpj_limpo_csv}**")
+                                        st.code(f"Senha de Acesso RH: {senha_rh}", language=None)
+                                        st.warning("⚠️ **Anote esta senha com segurança!** Esta é a única vez que ela será exibida. Compartilhe com o RH da empresa.")
+
                                     if duplicados:
                                         st.warning(f"⚠️ CPF(s) já cadastrados: {', '.join(duplicados)}")
                                     if invalidos:
@@ -1035,18 +1082,60 @@ if menu == "🔐 Admin SSTG (Gestão)":
 # MÓDULO GESTÃO DAS RESPOSTAS (RH)
 # =============================================================================
 elif menu == "📊 Gestão das Respostas (RH)":
-    st.title("📊 Gestão das Respostas (RH)")
-    st.info("Módulo para acompanhamento das respostas da avaliação psicossocial pela equipe de RH.")
+    if 'rh_logado' not in st.session_state:
+        st.session_state.rh_logado = False
+        st.session_state.rh_cnpj = None
 
+    if not st.session_state.rh_logado:
+        st.title("🔐 Acesso RH — Gestão de Respostas")
+        st.info("Insira o CNPJ e a senha de acesso fornecida pela SSTG Admin.")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            cnpj_input = st.text_input("CNPJ da Empresa:", placeholder="00.000.000/0000-00")
+        with col2:
+            senha_input = st.text_input("Senha de Acesso RH:", type="password")
+
+        if st.button("🔓 Acessar", use_container_width=True):
+            cnpj_limpo = cnpj_input.strip().replace(".", "").replace("/", "").replace("-", "")
+
+            if not cnpj_limpo or not senha_input:
+                st.error("Preencha CNPJ e senha.")
+            else:
+                df_acessos = carregar_dados(ARQUIVO_ACESSOS)
+
+                # Verificar se CNPJ existe
+                empresa_data = df_acessos[df_acessos['CNPJ'] == cnpj_limpo]
+
+                if empresa_data.empty:
+                    st.error("❌ CNPJ não encontrado.")
+                else:
+                    # Verificar senha
+                    senha_hash_stored = empresa_data.iloc[0].get('Senha_RH_Hash', '')
+                    if senha_hash_stored and hash_senha(senha_input) == senha_hash_stored:
+                        st.session_state.rh_logado = True
+                        st.session_state.rh_cnpj = cnpj_limpo
+                        st.session_state.rh_empresa = empresa_data.iloc[0]['Empresa']
+                        st.rerun()
+                    else:
+                        st.error("❌ Senha incorreta.")
+        st.stop()
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # RH LOGADO - Exibir dados da empresa
+    # ─────────────────────────────────────────────────────────────────────────
+
+    st.title(f"📊 Gestão de Respostas — {st.session_state.rh_empresa}")
+
+    if st.sidebar.button("🚪 Sair"):
+        st.session_state.rh_logado = False
+        st.session_state.rh_cnpj = None
+        st.session_state.rh_empresa = None
+        st.rerun()
+
+    cnpj_cod = st.session_state.rh_cnpj
+    nome_res = caminho(f"respostas_CNPJ_{cnpj_cod}.csv")
     df_acessos = carregar_dados(ARQUIVO_ACESSOS)
-
-    if not df_acessos.empty:
-        opcoes_empresa = df_acessos.drop_duplicates('CNPJ')[['Empresa', 'CNPJ']].apply(
-            lambda r: f"{r['Empresa']} — CNPJ: {r['CNPJ']}", axis=1
-        ).tolist()
-        empresa_sel = st.selectbox("Selecione a empresa:", opcoes_empresa, key="rh_empresa_sel")
-        cnpj_cod    = empresa_sel.split("CNPJ: ")[-1]
-        nome_res    = caminho(f"respostas_CNPJ_{cnpj_cod}.csv")
 
         # ── Link do Questionário ───────────────────────────────────────────────
         with st.expander("🔗 Link do Questionário para esta empresa"):
@@ -1130,9 +1219,6 @@ elif menu == "📊 Gestão das Respostas (RH)":
             st.dataframe(df_res, use_container_width=True)
         else:
             st.info("Nenhuma resposta registrada ainda para esta empresa.")
-
-    else:
-        st.warning("Nenhuma empresa cadastrada no sistema. Solicite ao Admin que faça o cadastro.")
 
 # =============================================================================
 # MÓDULO QUESTIONÁRIO PSICOSSOCIAL
