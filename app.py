@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import glob
 import hashlib
 import re
 import secrets
@@ -97,7 +98,13 @@ def salvar_cadastro_completo(dados_emp: dict, colaboradores: list):
         if not validar_cpf_formato(cpf_limpo):
             invalidos.append(cpf_limpo)
             continue
-        if not df_existente.empty and cpf_limpo in df_existente['CPF'].values:
+        # Duplicidade verifica CPF + CNPJ: mesmo CPF pode responder em empresas diferentes
+        cnpj_atual = dados_emp['CNPJ']
+        ja_nessa_empresa = (
+            not df_existente.empty
+            and len(df_existente[(df_existente['CPF'] == cpf_limpo) & (df_existente['CNPJ'] == cnpj_atual)]) > 0
+        )
+        if ja_nessa_empresa:
             duplicados.append(cpf_limpo)
             continue
         novos.append({
@@ -711,11 +718,76 @@ if menu == "🔐 Admin SSTG (Gestão)":
                         st.success(msg) if ok else st.error(msg)
 
             with st.expander("⚠️ Zona de Perigo — use com cuidado"):
-                st.warning("Esta ação apagará TODOS os registros de acesso. Não há como desfazer.")
-                if st.button("🗑️ Resetar Banco de Dados (Excluir Tudo)", type="primary"):
-                    os.remove(ARQUIVO_ACESSOS)
-                    st.success("Banco resetado.")
-                    st.rerun()
+                st.error("⚠️ As ações abaixo são **irreversíveis**. Confirme com a senha do Admin SSTG antes de prosseguir.")
+
+                zt1, zt2 = st.tabs(["🗑️ Excluir Empresa", "💣 Resetar Tudo"])
+
+                # ── EXCLUIR EMPRESA INDIVIDUAL ────────────────────────────────
+                with zt1:
+                    st.warning("Remove **todos os acessos** e **todo o histórico de respostas** da empresa selecionada.")
+                    df_zona = carregar_dados(ARQUIVO_ACESSOS)
+                    if not df_zona.empty:
+                        empresas_zona = df_zona.drop_duplicates('CNPJ')[['Empresa', 'CNPJ']].apply(
+                            lambda r: f"{r['Empresa']} — CNPJ: {r['CNPJ']}", axis=1
+                        ).tolist()
+                        emp_del = st.selectbox("Empresa a excluir:", empresas_zona, key="zona_emp_del")
+                        cnpj_del = emp_del.split("CNPJ: ")[-1]
+                        nome_del = emp_del.split(" — CNPJ:")[0].strip()
+
+                        # Contadores para exibir impacto
+                        qtd_cpfs  = len(df_zona[df_zona['CNPJ'] == cnpj_del])
+                        arq_resp  = caminho(f"respostas_CNPJ_{cnpj_del}.csv")
+                        qtd_resp  = len(pd.read_csv(arq_resp, sep=';', dtype=str)) if os.path.exists(arq_resp) else 0
+
+                        col_info1, col_info2 = st.columns(2)
+                        col_info1.metric("CPFs que serão removidos", qtd_cpfs)
+                        col_info2.metric("Respostas que serão apagadas", qtd_resp)
+
+                        st.divider()
+                        st.markdown("**Confirme digitando a senha do Admin SSTG:**")
+                        senha_conf_del = st.text_input(
+                            "Senha Admin:", type="password", key="senha_conf_emp_del"
+                        )
+
+                        if st.button("🗑️ EXCLUIR EMPRESA E TODO O HISTÓRICO", type="primary",
+                                     use_container_width=True, key="btn_del_empresa"):
+                            if not senha_conf_del:
+                                st.error("Digite a senha do Admin para confirmar.")
+                            elif senha_conf_del != SENHA_ADMIN:
+                                st.error("❌ Senha incorreta. Operação cancelada.")
+                            else:
+                                # 1. Remove os CPFs da empresa no arquivo de acessos
+                                df_zona_upd = df_zona[df_zona['CNPJ'] != cnpj_del]
+                                df_zona_upd.to_csv(ARQUIVO_ACESSOS, index=False, sep=';', encoding='utf-8-sig')
+                                # 2. Remove arquivo de respostas da empresa
+                                if os.path.exists(arq_resp):
+                                    os.remove(arq_resp)
+                                st.success(f"✅ Empresa **{nome_del}** removida com sucesso. {qtd_cpfs} acesso(s) e {qtd_resp} resposta(s) apagadas.")
+                                st.rerun()
+                    else:
+                        st.info("Nenhuma empresa cadastrada.")
+
+                # ── RESETAR TUDO ──────────────────────────────────────────────
+                with zt2:
+                    st.warning("Remove **TODOS** os registros de acesso e **TODOS** os históricos de resposta de **todas** as empresas.")
+                    senha_conf_all = st.text_input(
+                        "Senha Admin para confirmar reset total:", type="password", key="senha_conf_reset_all"
+                    )
+                    if st.button("💣 RESETAR BANCO DE DADOS COMPLETO", type="primary",
+                                 use_container_width=True, key="btn_reset_all"):
+                        if not senha_conf_all:
+                            st.error("Digite a senha do Admin para confirmar.")
+                        elif senha_conf_all != SENHA_ADMIN:
+                            st.error("❌ Senha incorreta. Operação cancelada.")
+                        else:
+                            # Remove arquivo de acessos
+                            if os.path.exists(ARQUIVO_ACESSOS):
+                                os.remove(ARQUIVO_ACESSOS)
+                            # Remove todos os arquivos de respostas por empresa
+                            for arq in glob.glob(caminho("respostas_CNPJ_*.csv")):
+                                os.remove(arq)
+                            st.success("✅ Banco de dados completo resetado.")
+                            st.rerun()
         else:
             st.info("Nenhum registro encontrado. Faça o cadastro na aba anterior.")
 
