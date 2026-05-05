@@ -28,19 +28,26 @@ IS_STREAMLIT_CLOUD = os.environ.get('STREAMLIT_SERVER_HEADLESS') == 'true'
 
 if IS_STREAMLIT_CLOUD:
     DATA_DIR = "./data"
-    APP_URL = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
+    DOC_DIR  = "."       # Arquivos .md ficam na raiz do repositório no Cloud
+    APP_URL  = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
 else:
     DATA_DIR = r"G:\Meu Drive\SSTG-E-Social"
-    APP_URL = "http://192.168.77.2:8501"
+    DOC_DIR  = r"G:\Meu Drive\SSTG-E-Social"   # Mesma pasta local
+    APP_URL  = "http://192.168.77.2:8501"
 
 # URL pública para compartilhamento (sempre usa Streamlit Cloud)
 SHARE_URL = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
 
 def caminho(nome_arquivo: str) -> str:
+    """Caminho para arquivos de dados (CSVs, uploads)."""
     if DATA_DIR:
         os.makedirs(DATA_DIR, exist_ok=True)
         return os.path.join(DATA_DIR, nome_arquivo)
     return nome_arquivo
+
+def caminho_doc(nome_arquivo: str) -> str:
+    """Caminho para arquivos de documentação (.md, .pdf) na raiz do projeto."""
+    return os.path.join(DOC_DIR, nome_arquivo)
 
 # ─── CONFIGURAÇÕES ────────────────────────────────────────────────────────────
 ARQUIVO_ACESSOS = caminho("db_acessos_autorizados.csv")
@@ -1146,7 +1153,7 @@ if menu == "🔐 Admin SSTG (Gestão)":
 
                     # Botão para baixar PDF
                     try:
-                        pdf_path = caminho(pdf)
+                        pdf_path = caminho_doc(pdf)
                         with open(pdf_path, 'rb') as f:
                             st.download_button(
                                 label="⬇️ PDF",
@@ -1174,7 +1181,7 @@ if menu == "🔐 Admin SSTG (Gestão)":
 
             if st.session_state.doc_view in doc_selecionado:
                 arquivo = doc_selecionado[st.session_state.doc_view]
-                caminho_arquivo = caminho(arquivo)
+                caminho_arquivo = caminho_doc(arquivo)
 
                 col_ler, col_fechar = st.columns([20, 1])
                 with col_ler:
