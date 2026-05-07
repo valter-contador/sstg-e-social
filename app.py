@@ -1005,23 +1005,75 @@ if menu == "🔐 Admin SSTG (Gestão)":
 
                 # Gráfico de adesão
                 st.subheader("📊 Adesão ao Questionário")
-                df_chart = pd.DataFrame({
-                    "Questionários": {"Autorizados": total_auth, "Respondidos": total_resp}
-                })
-                st.bar_chart(df_chart, use_container_width=True, height=280)
+                try:
+                    import plotly.graph_objects as go
+                    fig_ades = go.Figure(go.Bar(
+                        x=["Autorizados", "Respondidos"],
+                        y=[total_auth, total_resp],
+                        marker_color=["#282C5B", "#5A9F62"],
+                        text=[str(total_auth), str(total_resp)],
+                        textposition="outside",
+                        width=0.4,
+                    ))
+                    fig_ades.update_layout(
+                        yaxis=dict(title="Quantidade", range=[0, max(total_auth, 1) * 1.2]),
+                        xaxis=dict(title=""),
+                        plot_bgcolor="white",
+                        margin=dict(t=20, b=20, l=40, r=40),
+                        height=260,
+                        showlegend=False,
+                    )
+                    st.plotly_chart(fig_ades, use_container_width=True)
+                except ImportError:
+                    df_chart = pd.DataFrame({"Questionários": {"Autorizados": total_auth, "Respondidos": total_resp}})
+                    st.bar_chart(df_chart, use_container_width=True, height=260)
 
                 st.divider()
 
-                # Médias por dimensão
+                # Médias por dimensão — gráfico de barras coloridas
                 cols_media = [c for c in df_res.columns if c.startswith('Media_') and c != 'Media_Geral']
                 if cols_media:
-                    st.subheader("Médias por Dimensão (escala 0 a 4)")
-                    df_num  = df_res[cols_media].apply(pd.to_numeric, errors='coerce')
-                    medias  = df_num.mean()
-                    cols_d  = st.columns(len(cols_media))
-                    for i, (col_nome, val) in enumerate(medias.items()):
-                        nome_exib = col_nome.replace("Media_", "").replace("_", " ")
-                        cols_d[i].metric(nome_exib, f"{val:.2f}")
+                    st.subheader("📈 Médias por Dimensão (escala 0 a 4)")
+                    df_num = df_res[cols_media].apply(pd.to_numeric, errors='coerce')
+                    medias = df_num.mean()
+
+                    CORES_DIMS = [
+                        "#5A9F62", "#282C5B", "#DC3B24", "#F4A236",
+                        "#4A90D9", "#9B59B6", "#1ABC9C", "#E67E22"
+                    ]
+                    labels = [c.replace("Media_", "").replace("_", " ") for c in medias.index]
+                    values = [round(v, 2) for v in medias.values]
+                    cores  = [CORES_DIMS[i % len(CORES_DIMS)] for i in range(len(labels))]
+
+                    try:
+                        import plotly.graph_objects as go
+                        fig_dim = go.Figure(go.Bar(
+                            x=labels,
+                            y=values,
+                            marker_color=cores,
+                            text=[f"{v:.2f}" for v in values],
+                            textposition="outside",
+                            width=0.6,
+                        ))
+                        fig_dim.update_layout(
+                            yaxis=dict(
+                                title="Média (0–4)",
+                                range=[0, 4.6],
+                                tickvals=[0, 1, 2, 3, 4],
+                                gridcolor="#EEEEEE",
+                            ),
+                            xaxis=dict(title="", tickangle=-20),
+                            plot_bgcolor="white",
+                            margin=dict(t=30, b=80, l=50, r=30),
+                            height=420,
+                            showlegend=False,
+                        )
+                        st.plotly_chart(fig_dim, use_container_width=True)
+                    except ImportError:
+                        cols_d = st.columns(len(cols_media))
+                        for i, (col_nome, val) in enumerate(medias.items()):
+                            nome_exib = col_nome.replace("Media_", "").replace("_", " ")
+                            cols_d[i].metric(nome_exib, f"{val:.2f}")
 
                 st.divider()
                 st.subheader("Histórico de Respostas")
@@ -1488,12 +1540,88 @@ elif menu == "📊 Gestão das Respostas (RH)":
         pct        = round((total_resp / total_auth) * 100, 1) if total_auth > 0 else 0
 
         c1, c2, c3 = st.columns(3)
-        c1.metric("Total de Colaboradores Autorizados", total_auth)
+        c1.metric("CPFs Autorizados",   total_auth)
         c2.metric("Respostas Recebidas", total_resp)
-        c3.metric("Taxa de Resposta", f"{pct}%")
+        c3.metric("Taxa de Adesão",      f"{pct}%")
 
-        st.info(f"✅ {total_resp} resposta(s) registrada(s) para esta empresa.")
-        st.dataframe(df_res, use_container_width=True)
+        # Gráfico de adesão
+        st.subheader("📊 Adesão ao Questionário")
+        try:
+            import plotly.graph_objects as go
+            fig_ades = go.Figure(go.Bar(
+                x=["Autorizados", "Respondidos"],
+                y=[total_auth, total_resp],
+                marker_color=["#282C5B", "#5A9F62"],
+                text=[str(total_auth), str(total_resp)],
+                textposition="outside",
+                width=0.4,
+            ))
+            fig_ades.update_layout(
+                yaxis=dict(title="Quantidade", range=[0, max(total_auth, 1) * 1.2]),
+                xaxis=dict(title=""),
+                plot_bgcolor="white",
+                margin=dict(t=20, b=20, l=40, r=40),
+                height=260,
+                showlegend=False,
+            )
+            st.plotly_chart(fig_ades, use_container_width=True)
+        except ImportError:
+            df_chart = pd.DataFrame({"Questionários": {"Autorizados": total_auth, "Respondidos": total_resp}})
+            st.bar_chart(df_chart, use_container_width=True, height=260)
+
+        # Médias por dimensão — gráfico de barras coloridas
+        cols_media_rh = [c for c in df_res.columns if c.startswith('Media_') and c != 'Media_Geral']
+        if cols_media_rh:
+            st.divider()
+            st.subheader("📈 Médias por Dimensão (escala 0 a 4)")
+            df_num_rh = df_res[cols_media_rh].apply(pd.to_numeric, errors='coerce')
+            medias_rh = df_num_rh.mean()
+
+            CORES_DIMS = [
+                "#5A9F62", "#282C5B", "#DC3B24", "#F4A236",
+                "#4A90D9", "#9B59B6", "#1ABC9C", "#E67E22"
+            ]
+            labels_rh = [c.replace("Media_", "").replace("_", " ") for c in medias_rh.index]
+            values_rh = [round(v, 2) for v in medias_rh.values]
+            cores_rh  = [CORES_DIMS[i % len(CORES_DIMS)] for i in range(len(labels_rh))]
+
+            try:
+                import plotly.graph_objects as go
+                fig_rh = go.Figure(go.Bar(
+                    x=labels_rh,
+                    y=values_rh,
+                    marker_color=cores_rh,
+                    text=[f"{v:.2f}" for v in values_rh],
+                    textposition="outside",
+                    width=0.6,
+                ))
+                fig_rh.update_layout(
+                    yaxis=dict(
+                        title="Média (0–4)",
+                        range=[0, 4.6],
+                        tickvals=[0, 1, 2, 3, 4],
+                        gridcolor="#EEEEEE",
+                    ),
+                    xaxis=dict(title="", tickangle=-20),
+                    plot_bgcolor="white",
+                    margin=dict(t=30, b=80, l=50, r=30),
+                    height=420,
+                    showlegend=False,
+                )
+                st.plotly_chart(fig_rh, use_container_width=True)
+            except ImportError:
+                cols_d = st.columns(len(cols_media_rh))
+                for i, (col_nome, val) in enumerate(medias_rh.items()):
+                    nome_exib = col_nome.replace("Media_", "").replace("_", " ")
+                    cols_d[i].metric(nome_exib, f"{val:.2f}")
+
+        st.divider()
+        st.subheader("Histórico de Respostas")
+        colunas_exibir_rh = [c for c in df_res.columns if c != 'CPF_Hash']
+        st.dataframe(df_res[colunas_exibir_rh], use_container_width=True)
+
+        csv_rh = df_res[colunas_exibir_rh].to_csv(index=False, sep=';', encoding='utf-8-sig')
+        st.download_button("⬇️ Baixar resultados (.csv)", csv_rh, f"resultados_{cnpj_cod}.csv", "text/csv")
     else:
         st.info("Nenhuma resposta registrada ainda para esta empresa.")
 
