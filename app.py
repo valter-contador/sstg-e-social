@@ -24,6 +24,10 @@ def _achar_fonte():
     """Retorna o primeiro arquivo TTF encontrado no sistema."""
     windir = os.environ.get("WINDIR", r"C:\Windows")
     candidatos = [
+        os.path.join(windir, "Fonts", "seguiemj.ttf"),   # Segoe UI Emoji — Unicode completo
+        os.path.join(windir, "Fonts", "segoeui.ttf"),    # Segoe UI
+        os.path.join(windir, "Fonts", "segoeuil.ttf"),   # Segoe UI Light
+        os.path.join(windir, "Fonts", "arialuni.ttf"),   # Arial Unicode MS
         os.path.join(windir, "Fonts", "arial.ttf"),
         os.path.join(windir, "Fonts", "Arial.ttf"),
         os.path.join(windir, "Fonts", "calibri.ttf"),
