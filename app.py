@@ -1353,7 +1353,7 @@ if menu == "🔐 Admin SSTG (Gestão)":
                                 st.download_button(
                                     "⬇️ Baixar Laudo PDF",
                                     pdf_bytes,
-                                    f"laudo_psicossocial_{cnpj_cod}.pdf",
+                                    f"Laudo_Psicossocial_{cnpj_cod}_v7.7_{datetime.now().strftime('%d-%m-%Y')}.pdf",
                                     "application/pdf",
                                     use_container_width=True,
                                 )
