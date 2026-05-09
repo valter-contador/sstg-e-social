@@ -141,7 +141,14 @@ def salvar_resposta(dados):
             db_rec[k.lower()] = v
         else:
             db_rec[k.lower()] = v
-    sb.table("respostas").upsert(db_rec, on_conflict="cpf_hash,cnpj").execute()
+    try:
+        sb.table("respostas").upsert(db_rec, on_conflict="cpf_hash,cnpj").execute()
+    except Exception as e:
+        raise RuntimeError(
+            f"Erro Supabase ao salvar resposta.\n"
+            f"Colunas enviadas: {sorted(db_rec.keys())}\n"
+            f"Erro original: {e}"
+        ) from e
 
 
 def deletar_respostas_empresa(cnpj):
