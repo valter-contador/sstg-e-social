@@ -326,52 +326,38 @@ OPCOES = list(DEPARA.keys())
 DIMENSOES = {
     "📦 Cargo": {
         "q1":  "01. Tenho pleno conhecimento sobre o que se espera do meu trabalho.",
-        "q4":  "04. Eu sei como fazer o meu trabalho.",
-        "q11": "11. Estão claras as minhas tarefas e responsabilidades.",
-        "q13": "13. Os objetivos e metas do meu setor são claros para mim.",
-        "q17": "17. Eu vejo como o meu trabalho se encaixa nos objetivos da empresa."
+        "q11": "02. Estão claras as minhas tarefas e responsabilidades.",
+        "q13": "03. Os objetivos e metas do meu setor são claros para mim.",
     },
     "🎮 Controle": {
-        "q2":  "02. Posso decidir quando fazer uma pausa.",
-        "q10": "10. Consideram a minha opinião sobre a velocidade do meu trabalho.",
-        "q15": "15. Tenho liberdade de escolha de como fazer meu trabalho.",
-        "q19": "19. Tenho liberdade de escolha para decidir o que fazer no meu trabalho.",
-        "q25": "25. Minhas sugestões são consideradas sobre como fazer meu trabalho.",
-        "q30": "30. O meu horário de trabalho pode ser flexível."
+        "q15": "04. Tenho liberdade de escolha de como fazer meu trabalho.",
+        "q19": "05. Tenho liberdade de escolha para decidir o que fazer no meu trabalho.",
+        "q25": "06. Minhas sugestões são consideradas sobre como fazer meu trabalho.",
     },
     "⚖️ Demandas": {
-        "q3":  "03. As exigências de trabalho são difíceis de combinar.",
-        "q6":  "06. Tenho prazos inatingíveis.",
-        "q9":  "09. Devo trabalhar muito intensamente.",
-        "q12": "12. Deixo tarefas sem fazer por excesso de carga.",
-        "q16": "16. Não tenho possibilidade de fazer pausas suficientes.",
-        "q18": "18. Recebo pressão para trabalhar em outro horário.",
-        "q20": "20. Tenho que fazer meu trabalho com muita rapidez.",
-        "q22": "22. As pausas temporárias são impossíveis de cumprir."
+        "q9":  "07. Devo trabalhar muito intensamente.",
+        "q12": "08. Deixo tarefas sem fazer por excesso de carga.",
+        "q20": "09. Tenho que fazer meu trabalho com muita rapidez.",
     },
     "⚠️ Relacionamentos": {
-        "q5":  "05. Falam ou se comportam comigo de forma dura.",
-        "q14": "14. Existem conflitos entre os colegas.",
-        "q21": "21. Sinto que sou perseguido no trabalho.",
-        "q34": "34. As relações no trabalho são tensas."
+        "q5":  "10. Falam ou se comportam comigo de forma dura.",
+        "q21": "11. Sinto que sou perseguido no trabalho.",
+        "q14": "12. Existem conflitos entre os colegas.",
     },
     "🤝 Apoio dos Colegas": {
-        "q7":  "07. Posso contar com ajuda dos colegas.",
-        "q24": "24. Meus colegas me dão apoio quando preciso.",
-        "q27": "27. Meus colegas demonstram o respeito que mereço.",
-        "q31": "31. Os colegas estão disponíveis para escutar meus problemas."
+        "q7":  "13. Posso contar com ajuda dos colegas.",
+        "q27": "14. Meus colegas demonstram o respeito que mereço.",
+        "q31": "15. Os colegas estão disponíveis para escutar meus problemas.",
     },
     "👔 Apoio da Chefia": {
-        "q8":  "08. Recebo informações e suporte que me ajudam no trabalho.",
-        "q23": "23. Posso confiar no meu chefe.",
-        "q29": "29. Quando algo me perturba posso falar com meu chefe.",
-        "q33": "33. Tenho suportado trabalhos emocionalmente exigentes.",
-        "q35": "35. Meu chefe me incentiva no trabalho."
+        "q23": "16. Posso confiar no meu chefe.",
+        "q29": "17. Quando algo me perturba posso falar com meu chefe.",
+        "q35": "18. Meu chefe me incentiva no trabalho.",
     },
     "📢 Comunicação e Mudanças": {
-        "q26": "26. Tenho oportunidades para pedir explicações sobre mudanças.",
-        "q28": "28. As pessoas são consultadas sobre mudanças no trabalho.",
-        "q32": "32. Quando há mudanças, faço o trabalho com o mesmo carinho."
+        "q26": "19. Tenho oportunidades para pedir explicações sobre mudanças.",
+        "q28": "20. As pessoas são consultadas sobre mudanças no trabalho.",
+        "q32": "21. Quando há mudanças, faço o trabalho com o mesmo carinho.",
     }
 }
 
