@@ -358,10 +358,14 @@ DIMENSOES = {
         "q26": "19. Tenho oportunidades para pedir explicações sobre mudanças.",
         "q28": "20. As pessoas são consultadas sobre mudanças no trabalho.",
         "q32": "21. Quando há mudanças, faço o trabalho com o mesmo carinho.",
+    },
+    "🚨 Comportamentos Ofensivos": {
+        "q36": "22. Fui submetido(a) a ameaças, agressões verbais graves ou violência física no meu ambiente de trabalho.",
+        "q37": "23. Fui exposto(a) a situações de assédio sexual ou condutas de natureza sexual não desejadas no trabalho.",
     }
 }
 
-DIMS_INVERTIDAS = {"Demandas", "Relacionamentos"}
+DIMS_INVERTIDAS = {"Demandas", "Relacionamentos", "Comportamentos_Ofensivos"}
 
 # ─── CONFIGURAÇÃO DA PÁGINA ───────────────────────────────────────────────────
 db.ping()  # acorda o banco apos hibernacao (free tier)
