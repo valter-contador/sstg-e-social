@@ -150,7 +150,12 @@ BS8800 = {
     ("Extremamente Prejudicial", "Excessiva"):    "Intolerável",
 }
 
-PROB_MAP = {"Alto": "Excessiva", "Moderado": "Significante", "Baixo": "Pequena"}
+PROB_MAP = {
+    "Alto":       "Excessiva",
+    "Moderado":   "Significante",
+    "Baixo":      "Pequena",
+    "Muito Baixo": "Desprezível",   # condição muito favorável → probabilidade de dano negligenciável
+}
 
 RISCO_COR = {
     "Trivial":      colors.HexColor('#70AD47'),
@@ -171,17 +176,28 @@ ACAO_NECESSARIA = {
 # ===================== FUNÇÕES AUXILIARES =====================
 
 def classificar(media: float) -> str:
+    """
+    Classifica a média COPSOQ III em nível de probabilidade de dano.
+    Escala 0–4 (valores já invertidos para dimensões de risco).
+      ≤ 1,49 → Alto       → Probabilidade Excessiva
+      ≤ 2,99 → Moderado   → Probabilidade Significante
+      ≤ 3,49 → Baixo      → Probabilidade Pequena
+      > 3,49 → Muito Baixo→ Probabilidade Desprezível (condição muito favorável)
+    """
     if media <= 1.49:
         return "Alto"
     elif media <= 2.99:
         return "Moderado"
-    return "Baixo"
+    elif media <= 3.49:
+        return "Baixo"
+    return "Muito Baixo"
 
 def cor_copsoq(classif: str):
     return {
-        "Alto": C_LARANJA,
-        "Moderado": C_AMARELO,
-        "Baixo": C_VERDE,
+        "Alto":        C_LARANJA,
+        "Moderado":    C_AMARELO,
+        "Baixo":       C_VERDE,
+        "Muito Baixo": C_VERDE,   # mesmo visual de Baixo — condição muito favorável
     }.get(classif, C_CINZA)
 
 def bs8800_nivel(sev: str, prob: str) -> str:
