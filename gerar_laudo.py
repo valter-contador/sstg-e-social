@@ -895,8 +895,15 @@ def build_s4(st, medias_por_dim):
     for i, (dim_key, cfg) in enumerate(DIMS_ANALITICAS.items()):
         col_key = f"Dim_{_slug(dim_key)}"
         media = medias_por_dim.get(col_key, 2.0)
-        classif = classificar(media)
-        prob = PROB_MAP[classif]
+        # Classificação inline (4 níveis) — robusto independente de cache de módulo
+        if media > 3.49:
+            classif, prob = "Muito Baixo", "Desprezível"
+        elif media > 2.99:
+            classif, prob = "Baixo", "Pequena"
+        elif media > 1.49:
+            classif, prob = "Moderado", "Significante"
+        else:
+            classif, prob = "Alto", "Excessiva"
         sev = cfg["severidade"]
         nivel = bs8800_nivel(sev, prob)
         plano = ACAO_NECESSARIA.get(nivel, "SIM")
@@ -989,8 +996,15 @@ def build_s5(st, medias_por_dim):
     for dim_key, cfg in DIMS_ANALITICAS.items():
         col_key = f"Dim_{_slug(dim_key)}"
         media = medias_por_dim.get(col_key, 2.0)
-        classif = classificar(media)
-        prob = PROB_MAP[classif]
+        # Classificação inline (4 níveis) — robusto independente de cache de módulo
+        if media > 3.49:
+            classif, prob = "Muito Baixo", "Desprezível"
+        elif media > 2.99:
+            classif, prob = "Baixo", "Pequena"
+        elif media > 1.49:
+            classif, prob = "Moderado", "Significante"
+        else:
+            classif, prob = "Alto", "Excessiva"
         nivel = bs8800_nivel(cfg["severidade"], prob)
 
         if ACAO_NECESSARIA.get(nivel, "SIM") == "NÃO":
