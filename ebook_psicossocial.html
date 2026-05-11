@@ -8,7 +8,7 @@
 
     <!-- ATENÇÃO: Atualize a URL abaixo com o link real do questionário após publicar o app online -->
     <script>
-        var LINK_QUESTIONARIO = "http://192.168.77.2:8501"; // ← substitua pela URL real do app
+        var LINK_QUESTIONARIO = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app";
     </script>
 
     <style>
@@ -99,9 +99,17 @@
             text-align: center;
             min-width: 100px;
             backdrop-filter: blur(4px);
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            display: block;
+        }
+        .trust-badge:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
         }
         .trust-badge .icon { font-size: 1.7em; }
-        .trust-badge .label { font-size: 0.72em; opacity: 0.9; margin-top: 4px; }
+        .trust-badge .label { font-size: 0.72em; opacity: 0.9; margin-top: 4px; color: white; }
 
         /* ── LAYOUT ── */
         .container {
@@ -426,22 +434,22 @@
     <h1>Sua Voz Importa.<br>Sua Saúde Também.</h1>
     <p>Entenda a avaliação de riscos psicossociais e veja como a sua participação pode transformar o ambiente de trabalho de todos.</p>
     <div class="trust-row">
-        <div class="trust-badge">
+        <a class="trust-badge" href="#sec-anonimato">
             <div class="icon">🔒</div>
             <div class="label">Confidencial</div>
-        </div>
-        <div class="trust-badge">
+        </a>
+        <a class="trust-badge" href="#sec-anonimato">
             <div class="icon">👤</div>
             <div class="label">Anônimo</div>
-        </div>
-        <div class="trust-badge">
+        </a>
+        <a class="trust-badge" href="#sec-como-responder">
             <div class="icon">⏱️</div>
             <div class="label">~10 minutos</div>
-        </div>
-        <div class="trust-badge">
+        </a>
+        <a class="trust-badge" href="#sec-o-que-e">
             <div class="icon">🏆</div>
             <div class="label">Protocolo NR-01</div>
-        </div>
+        </a>
     </div>
 </header>
 
@@ -451,7 +459,7 @@
 <div class="container">
 
     <!-- SEÇÃO 1: O QUE É -->
-    <section class="section">
+    <section class="section" id="sec-o-que-e">
         <div class="section-label">O que é isso?</div>
         <h2>A avaliação de riscos psicossociais</h2>
         <p>Assim como fazemos exames médicos para cuidar da saúde física, a avaliação psicossocial cuida da nossa <strong>saúde mental e emocional no trabalho</strong>. Ela identifica situações do dia a dia — como pressão excessiva, falta de apoio ou comunicação ruim — que podem afetar o bem-estar de toda a equipe.</p>
@@ -507,7 +515,7 @@
     </section>
 
     <!-- SEÇÃO 3: ANONIMATO -->
-    <section class="section">
+    <section class="section" id="sec-anonimato">
         <div class="section-label">Sua privacidade</div>
         <h2>100% Anônimo e Protegido</h2>
         <p>Sabemos que para responder com honestidade, você precisa ter certeza de que ninguém vai saber o que você respondeu. Por isso, construímos o sistema com <strong>múltiplas camadas de proteção</strong>:</p>
@@ -541,7 +549,7 @@
     </section>
 
     <!-- SEÇÃO 4: COMO RESPONDER -->
-    <section class="section">
+    <section class="section" id="sec-como-responder">
         <div class="section-label">Como funciona</div>
         <h2>Passo a passo para responder</h2>
         <p>É simples e rápido. Siga os passos abaixo:</p>
