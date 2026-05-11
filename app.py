@@ -145,6 +145,7 @@ COMPARTILHAMENTO_DISPONIVEL = True
 DOC_DIR   = os.path.dirname(os.path.abspath(__file__))
 APP_URL   = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
 SHARE_URL = "https://sstg-e-social-687zwalcuokbggvtc7iy9m.streamlit.app"
+EBOOK_URL = "https://valter-contador.github.io/sstg-e-social/ebook_psicossocial.html"
 SENHA_ADMIN = "Valter@sstg230914"
 
 def caminho_doc(nome_arquivo: str) -> str:
@@ -1930,6 +1931,44 @@ elif menu == "📊 Gestão das Respostas (RH)":
             "Este é o link público que funciona em qualquer dispositivo, conectado à internet."
         )
 
+    # ── Card do E-book Educativo ───────────────────────────────────────────
+    with st.expander("📘 E-book Educativo — Compartilhe com os Colaboradores", expanded=True):
+        st.markdown(
+            "Envie este e-book **antes** do link do questionário. "
+            "Ele explica o que é a avaliação, garante o anonimato e incentiva a participação."
+        )
+        st.markdown(f"""
+            <div style="
+                background: linear-gradient(135deg, #282C5B 0%, #1e3a8a 60%, #5A9F62 100%);
+                border-radius: 14px; padding: 24px 26px; color: white; margin: 8px 0 16px 0;
+                box-shadow: 0 4px 20px rgba(40,44,91,0.25);
+            ">
+                <div style="font-size:0.68em; letter-spacing:2px; opacity:0.7; text-transform:uppercase; margin-bottom:6px;">
+                    Material de apoio · SSTG E-Social
+                </div>
+                <div style="font-size:1.2em; font-weight:800; margin-bottom:8px;">
+                    📘 Sua Voz Importa — Saúde Mental no Trabalho
+                </div>
+                <div style="opacity:0.88; font-size:0.88em; margin-bottom:16px;">
+                    E-book educativo: o que é a avaliação psicossocial, como funciona,
+                    por que é anônima e como as respostas geram mudanças reais.
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                    <span style="background:rgba(255,255,255,0.15); border-radius:20px; padding:3px 10px; font-size:0.75em;">📖 Leitura rápida</span>
+                    <span style="background:rgba(255,255,255,0.15); border-radius:20px; padding:3px 10px; font-size:0.75em;">🔒 Explica o anonimato</span>
+                    <span style="background:rgba(255,255,255,0.15); border-radius:20px; padding:3px 10px; font-size:0.75em;">📱 Funciona no celular</span>
+                </div>
+                <a href="{EBOOK_URL}" target="_blank" style="
+                    display:inline-block; background:#DC3B24; color:white;
+                    text-decoration:none; font-weight:700; padding:9px 22px;
+                    border-radius:50px; font-size:0.88em;
+                ">📘 Abrir E-book ↗</a>
+            </div>
+        """, unsafe_allow_html=True)
+        st.markdown("**Link do e-book para copiar e enviar:**")
+        st.code(EBOOK_URL, language=None)
+        st.caption("💡 Sugestão: envie o e-book 2 a 3 dias antes de abrir o questionário para aumentar a adesão.")
+
     # ── Gerar Imagem de Compartilhamento ───────────────────────────────────
     with st.expander("🖼️ Gerar QRCode do Questionário para Compartilhamento"):
         st.info("Gere uma imagem com QR Code para compartilhar nas redes sociais ou enviar por email.")
@@ -1940,7 +1979,7 @@ elif menu == "📊 Gestão das Respostas (RH)":
             with col_gerar:
                 if st.button("🎨 Gerar Imagem com QR Code", use_container_width=True, key="btn_gerar_img_rh"):
                     try:
-                        nome_empresa = empresa_sel.split(" — CNPJ:")[0].strip()
+                        nome_empresa = st.session_state.rh_empresa
 
                         with st.spinner("Gerando imagem..."):
                             img_bytes = gerar_imagem_compartilhamento_simples(
