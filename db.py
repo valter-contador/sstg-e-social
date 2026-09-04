@@ -2,8 +2,10 @@
 db.py - Camada de acesso ao Supabase (substitui armazenamento em CSV)
 Persistencia garantida independente de redeploys no Streamlit Cloud.
 """
+import time
 import unicodedata
 from datetime import datetime
+import httpx
 import pandas as pd
 import streamlit as st
 
@@ -22,10 +24,31 @@ def _get_sb():
     return create_client(url, key)
 
 
+_ERROS_TRANSITORIOS = (httpx.ReadError, httpx.RemoteProtocolError,
+                        httpx.ConnectError, httpx.ConnectTimeout, httpx.WriteError)
+
+
+def _exec(fn, tentativas=3, espera=0.6):
+    """Executa uma chamada ao Supabase com retry para falhas transitórias de rede
+    (ex.: httpx.ReadError, quando uma conexão do pool de conexões é reaproveitada
+    após o servidor já tê-la fechado por ociosidade). `fn` é uma função sem
+    argumentos que monta e executa a query, para que ela seja refeita do zero a
+    cada tentativa (usando uma conexão nova do pool)."""
+    ultimo_erro = None
+    for tentativa in range(tentativas):
+        try:
+            return fn()
+        except _ERROS_TRANSITORIOS as e:
+            ultimo_erro = e
+            if tentativa < tentativas - 1:
+                time.sleep(espera * (tentativa + 1))
+    raise ultimo_erro
+
+
 def ping():
     """Acorda o banco apos hibernacao (free tier hiberna apos 7 dias sem uso)."""
     try:
-        _get_sb().table("config").select("chave").limit(1).execute()
+        _exec(lambda: _get_sb().table("config").select("chave").limit(1).execute())
     except Exception:
         pass
 
@@ -69,7 +92,7 @@ def _df_rename(df, mapa):
 
 def carregar_acessos():
     sb = _get_sb()
-    res = sb.table("acessos").select("*").execute()
+    res = _exec(lambda: sb.table("acessos").select("*").execute())
     if not res.data:
         return pd.DataFrame()
     df = pd.DataFrame(res.data).drop(columns=["id"], errors="ignore")
@@ -91,40 +114,40 @@ def salvar_acessos_em_lote(registros):
             key_map.update(_ACESSOS_A2D)
             rec[key_map.get(k, k.lower())] = v
         db_recs.append(rec)
-    sb.table("acessos").upsert(db_recs, on_conflict="cpf,cnpj").execute()
+    _exec(lambda: sb.table("acessos").upsert(db_recs, on_conflict="cpf,cnpj").execute())
 
 
 def atualizar_acesso_campos(cpf, cnpj, campos):
     sb = _get_sb()
     db_campos = _to_db(campos, _ACESSOS_A2D)
-    sb.table("acessos").update(db_campos).eq("cpf", cpf).eq("cnpj", cnpj).execute()
+    _exec(lambda: sb.table("acessos").update(db_campos).eq("cpf", cpf).eq("cnpj", cnpj).execute())
 
 
 def atualizar_acessos_por_cnpj(cnpj, campos):
     sb = _get_sb()
     db_campos = _to_db(campos, _ACESSOS_A2D)
-    sb.table("acessos").update(db_campos).eq("cnpj", cnpj).execute()
+    _exec(lambda: sb.table("acessos").update(db_campos).eq("cnpj", cnpj).execute())
 
 
 def deletar_acesso_cpf(cpf: str, cnpj: str) -> None:
     """Remove um colaborador específico (cpf+cnpj) da tabela de acessos."""
     sb = _get_sb()
-    sb.table("acessos").delete().eq("cpf", cpf).eq("cnpj", cnpj).execute()
+    _exec(lambda: sb.table("acessos").delete().eq("cpf", cpf).eq("cnpj", cnpj).execute())
 
 
 def deletar_acessos_empresa(cnpj):
     sb = _get_sb()
-    sb.table("acessos").delete().eq("cnpj", cnpj).execute()
+    _exec(lambda: sb.table("acessos").delete().eq("cnpj", cnpj).execute())
 
 
 def deletar_todos_acessos():
     sb = _get_sb()
-    sb.table("acessos").delete().neq("id", 0).execute()
+    _exec(lambda: sb.table("acessos").delete().neq("id", 0).execute())
 
 
 def carregar_respostas(cnpj):
     sb = _get_sb()
-    res = sb.table("respostas").select("*").eq("cnpj", cnpj).execute()
+    res = _exec(lambda: sb.table("respostas").select("*").eq("cnpj", cnpj).execute())
     if not res.data:
         return pd.DataFrame()
     df = pd.DataFrame(res.data).drop(columns=["id"], errors="ignore")
@@ -137,11 +160,11 @@ def carregar_respostas(cnpj):
 
 def cpf_respondeu(cnpj, cpf_hash):
     sb = _get_sb()
-    res = (sb.table("respostas")
-             .select("cpf_hash")
-             .eq("cnpj", cnpj)
-             .eq("cpf_hash", cpf_hash)
-             .execute())
+    res = _exec(lambda: sb.table("respostas")
+                          .select("cpf_hash")
+                          .eq("cnpj", cnpj)
+                          .eq("cpf_hash", cpf_hash)
+                          .execute())
     return bool(res.data)
 
 
@@ -157,26 +180,26 @@ def salvar_resposta(dados):
             db_rec[k.lower()] = v
     # Normaliza acentos em nomes de coluna (ex: media_comunicação → media_comunicacao)
     db_rec = {_norm_col(k): v for k, v in db_rec.items()}
-    sb.table("respostas").upsert(db_rec, on_conflict="cpf_hash,cnpj").execute()
+    _exec(lambda: sb.table("respostas").upsert(db_rec, on_conflict="cpf_hash,cnpj").execute())
 
 
 def deletar_respostas_empresa(cnpj):
     sb = _get_sb()
-    sb.table("respostas").delete().eq("cnpj", cnpj).execute()
+    _exec(lambda: sb.table("respostas").delete().eq("cnpj", cnpj).execute())
 
 
 def deletar_todas_respostas():
     sb = _get_sb()
-    sb.table("respostas").delete().neq("id", 0).execute()
+    _exec(lambda: sb.table("respostas").delete().neq("id", 0).execute())
 
 
 def cpf_respondeu_aep(cnpj, cpf_hash):
     sb = _get_sb()
-    res = (sb.table("respostas_aep")
-             .select("cpf_hash")
-             .eq("cnpj", cnpj)
-             .eq("cpf_hash", cpf_hash)
-             .execute())
+    res = _exec(lambda: sb.table("respostas_aep")
+                          .select("cpf_hash")
+                          .eq("cnpj", cnpj)
+                          .eq("cpf_hash", cpf_hash)
+                          .execute())
     return bool(res.data)
 
 
@@ -185,12 +208,12 @@ def salvar_resposta_aep(dados):
     (cpf_hash, cnpj, empresa, departamento, funcao_posto, avaliador, descricao_atividade,
     data, q1..q17, relato_dor, relato_dificuldades, relato_sugestoes, severidades)."""
     sb = _get_sb()
-    sb.table("respostas_aep").upsert(dados, on_conflict="cpf_hash,cnpj").execute()
+    _exec(lambda: sb.table("respostas_aep").upsert(dados, on_conflict="cpf_hash,cnpj").execute())
 
 
 def carregar_respostas_aep(cnpj):
     sb = _get_sb()
-    res = sb.table("respostas_aep").select("*").eq("cnpj", cnpj).execute()
+    res = _exec(lambda: sb.table("respostas_aep").select("*").eq("cnpj", cnpj).execute())
     if not res.data:
         return pd.DataFrame()
     return pd.DataFrame(res.data).drop(columns=["id"], errors="ignore")
@@ -198,12 +221,12 @@ def carregar_respostas_aep(cnpj):
 
 def deletar_respostas_aep_empresa(cnpj):
     sb = _get_sb()
-    sb.table("respostas_aep").delete().eq("cnpj", cnpj).execute()
+    _exec(lambda: sb.table("respostas_aep").delete().eq("cnpj", cnpj).execute())
 
 
 def deletar_todas_respostas_aep():
     sb = _get_sb()
-    sb.table("respostas_aep").delete().neq("id", 0).execute()
+    _exec(lambda: sb.table("respostas_aep").delete().neq("id", 0).execute())
 
 
 def carregar_ajustes_aep(cnpj):
@@ -212,7 +235,7 @@ def carregar_ajustes_aep(cnpj):
     revisão. Falha silenciosamente (None) se a tabela 'ajustes_aep' ainda não existir."""
     try:
         sb = _get_sb()
-        res = sb.table("ajustes_aep").select("*").eq("cnpj", cnpj).execute()
+        res = _exec(lambda: sb.table("ajustes_aep").select("*").eq("cnpj", cnpj).execute())
         return res.data[0] if res.data else None
     except Exception:
         return None
@@ -224,7 +247,7 @@ def salvar_ajustes_aep(cnpj, dados):
     AEP desta empresa."""
     sb = _get_sb()
     registro = {"cnpj": cnpj, **dados}
-    sb.table("ajustes_aep").upsert(registro, on_conflict="cnpj").execute()
+    _exec(lambda: sb.table("ajustes_aep").upsert(registro, on_conflict="cnpj").execute())
 
 
 def carregar_ajustes_drps(cnpj):
@@ -233,7 +256,7 @@ def carregar_ajustes_drps(cnpj):
     revisão. Falha silenciosamente (None) se a tabela 'ajustes_drps' ainda não existir."""
     try:
         sb = _get_sb()
-        res = sb.table("ajustes_drps").select("*").eq("cnpj", cnpj).execute()
+        res = _exec(lambda: sb.table("ajustes_drps").select("*").eq("cnpj", cnpj).execute())
         return res.data[0] if res.data else None
     except Exception:
         return None
@@ -245,12 +268,12 @@ def salvar_ajustes_drps(cnpj, dados):
     empresa."""
     sb = _get_sb()
     registro = {"cnpj": cnpj, **dados}
-    sb.table("ajustes_drps").upsert(registro, on_conflict="cnpj").execute()
+    _exec(lambda: sb.table("ajustes_drps").upsert(registro, on_conflict="cnpj").execute())
 
 
 def listar_cnpjs_com_respostas():
     sb = _get_sb()
-    res = sb.table("respostas").select("cnpj").execute()
+    res = _exec(lambda: sb.table("respostas").select("cnpj").execute())
     if not res.data:
         return []
     return list({r["cnpj"] for r in res.data})
@@ -259,14 +282,14 @@ def listar_cnpjs_com_respostas():
 def datas_respostas():
     """Datas de todas as respostas do questionário psicossocial (para o dashboard)."""
     sb = _get_sb()
-    res = sb.table("respostas").select("data").execute()
+    res = _exec(lambda: sb.table("respostas").select("data").execute())
     return [r["data"] for r in (res.data or []) if r.get("data")]
 
 
 def datas_respostas_aep():
     """Datas de todas as respostas do questionário AEP (para o dashboard)."""
     sb = _get_sb()
-    res = sb.table("respostas_aep").select("data").execute()
+    res = _exec(lambda: sb.table("respostas_aep").select("data").execute())
     return [r["data"] for r in (res.data or []) if r.get("data")]
 
 
@@ -290,7 +313,7 @@ def contar_laudos() -> dict:
     Retorna vazio se a tabela 'laudos' ainda não existir."""
     try:
         sb = _get_sb()
-        res = sb.table("laudos").select("tipo").execute()
+        res = _exec(lambda: sb.table("laudos").select("tipo").execute())
         contagem = {}
         for r in (res.data or []):
             t = r.get("tipo", "")
@@ -302,7 +325,7 @@ def contar_laudos() -> dict:
 
 def carregar_usuarios():
     sb = _get_sb()
-    res = sb.table("usuarios").select("*").execute()
+    res = _exec(lambda: sb.table("usuarios").select("*").execute())
     if not res.data:
         return pd.DataFrame(columns=["Usuario", "Nome", "Senha_Hash", "Status", "Data_Criacao"])
     df = pd.DataFrame(res.data).drop(columns=["id"], errors="ignore")
@@ -312,24 +335,24 @@ def carregar_usuarios():
 def salvar_usuario(registro):
     sb = _get_sb()
     db_rec = _to_db(registro, _USUARIOS_A2D)
-    sb.table("usuarios").upsert(db_rec, on_conflict="usuario").execute()
+    _exec(lambda: sb.table("usuarios").upsert(db_rec, on_conflict="usuario").execute())
 
 
 def atualizar_usuario_campos(usuario, campos):
     sb = _get_sb()
     db_campos = _to_db(campos, _USUARIOS_A2D)
-    sb.table("usuarios").update(db_campos).eq("usuario", usuario).execute()
+    _exec(lambda: sb.table("usuarios").update(db_campos).eq("usuario", usuario).execute())
 
 
 def get_config(chave):
     sb = _get_sb()
-    res = sb.table("config").select("valor").eq("chave", chave).execute()
+    res = _exec(lambda: sb.table("config").select("valor").eq("chave", chave).execute())
     return res.data[0]["valor"] if res.data else None
 
 
 def set_config(chave, valor):
     sb = _get_sb()
-    sb.table("config").upsert({"chave": chave, "valor": valor}, on_conflict="chave").execute()
+    _exec(lambda: sb.table("config").upsert({"chave": chave, "valor": valor}, on_conflict="chave").execute())
 
 
 def exportar_backup_zip():
@@ -346,20 +369,26 @@ def exportar_backup_zip():
             zf.writestr("db_usuarios_operacionais.csv",
                         df_u.to_csv(index=False, sep=";", encoding="utf-8-sig"))
         sb = _get_sb()
-        res_cfg = sb.table("config").select("*").execute()
+        res_cfg = _exec(lambda: sb.table("config").select("*").execute())
         if res_cfg.data:
             import pandas as _pd
             df_cfg = _pd.DataFrame(res_cfg.data).drop(columns=["id"], errors="ignore")
             zf.writestr("db_admin_config.csv",
                         df_cfg.to_csv(index=False, sep=";", encoding="utf-8-sig"))
         for cnpj in listar_cnpjs_com_respostas():
-            df_r = carregar_respostas(cnpj)
-            if not df_r.empty:
-                zf.writestr(f"respostas_CNPJ_{cnpj}.csv",
-                            df_r.to_csv(index=False, sep=";", encoding="utf-8-sig"))
-            df_aep = carregar_respostas_aep(cnpj)
-            if not df_aep.empty:
-                zf.writestr(f"respostas_AEP_CNPJ_{cnpj}.csv",
-                            df_aep.to_csv(index=False, sep=";", encoding="utf-8-sig"))
+            try:
+                df_r = carregar_respostas(cnpj)
+                if not df_r.empty:
+                    zf.writestr(f"respostas_CNPJ_{cnpj}.csv",
+                                df_r.to_csv(index=False, sep=";", encoding="utf-8-sig"))
+                df_aep = carregar_respostas_aep(cnpj)
+                if not df_aep.empty:
+                    zf.writestr(f"respostas_AEP_CNPJ_{cnpj}.csv",
+                                df_aep.to_csv(index=False, sep=";", encoding="utf-8-sig"))
+            except Exception as e:
+                # Nao deixa uma falha de rede pontual num unico CNPJ (apos esgotar
+                # os retries do _exec) derrubar o backup inteiro dos demais.
+                zf.writestr(f"ERRO_CNPJ_{cnpj}.txt",
+                            f"Falha ao exportar dados deste CNPJ: {e}")
     buf.seek(0)
     return buf.getvalue()
