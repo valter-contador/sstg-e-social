@@ -2,6 +2,7 @@
 db.py - Camada de acesso ao Supabase (substitui armazenamento em CSV)
 Persistencia garantida independente de redeploys no Streamlit Cloud.
 """
+import re
 import time
 import unicodedata
 from datetime import datetime
@@ -14,6 +15,23 @@ def _norm_col(nome: str) -> str:
     """Remove acentos de nomes de coluna: media_comunicação → media_comunicacao."""
     nfkd = unicodedata.normalize("NFKD", nome)
     return "".join(c for c in nfkd if not unicodedata.combining(c))
+
+
+_SURROGATOS_RE = re.compile("[\ud800-\udfff]")
+
+
+def _limpar_valor(v):
+    """Remove caracteres substitutos (surrogates) soltos de textos digitados pelo
+    usuário (ex.: emoji corrompido colado do teclado do celular). Sem isso, o
+    httpx quebra com UnicodeEncodeError (subclasse de ValueError) ao codificar
+    o corpo JSON em UTF-8 para enviar ao Supabase, derrubando a página inteira."""
+    if isinstance(v, str):
+        return _SURROGATOS_RE.sub("", v)
+    if isinstance(v, dict):
+        return {k: _limpar_valor(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_limpar_valor(x) for x in v]
+    return v
 
 
 @st.cache_resource(show_spinner=False)
@@ -179,7 +197,7 @@ def salvar_resposta(dados):
         else:
             db_rec[k.lower()] = v
     # Normaliza acentos em nomes de coluna (ex: media_comunicação → media_comunicacao)
-    db_rec = {_norm_col(k): v for k, v in db_rec.items()}
+    db_rec = {_norm_col(k): _limpar_valor(v) for k, v in db_rec.items()}
     _exec(lambda: sb.table("respostas").upsert(db_rec, on_conflict="cpf_hash,cnpj").execute())
 
 
@@ -208,6 +226,7 @@ def salvar_resposta_aep(dados):
     (cpf_hash, cnpj, empresa, departamento, funcao_posto, avaliador, descricao_atividade,
     data, q1..q17, relato_dor, relato_dificuldades, relato_sugestoes, severidades)."""
     sb = _get_sb()
+    dados = {k: _limpar_valor(v) for k, v in dados.items()}
     _exec(lambda: sb.table("respostas_aep").upsert(dados, on_conflict="cpf_hash,cnpj").execute())
 
 
